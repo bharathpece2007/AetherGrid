@@ -1,0 +1,207 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.dashboard-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-xs);
+}
+
+.hero-text h1 {
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--spacing-xs);
+}
+
+.hero-text .subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.hero-badges {
+  display: flex;
+  gap: var(--spacing-xl);
+}
+
+.status-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.badge-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.badge-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-lg);
+}
+
+/* Big Dial Card */
+.main-dial-card {
+  padding: var(--spacing-2xl) 0;
+  background: var(--surface-white);
+  /* The image has a textured background. Since we can't load the external image easily, let's fake it with a soft radial gradient */
+  background-image: radial-gradient(circle at center, #f0fdf4 0%, transparent 70%);
+}
+
+.dial-stats-row {
+  margin-top: var(--spacing-xl);
+  padding: 0 var(--spacing-2xl);
+}
+
+.stat-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.stat-val {
+  font-size: 1.25rem;
+}
+
+.mt-lg {
+  margin-top: var(--spacing-lg);
+}
+.w-full {
+  width: 100%;
+}
+.text-center {
+  text-align: center;
+}
+
+/* System Equilibrium Flow Chart Area */
+.chart-card {
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.chart-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.time-tabs {
+  display: inline-flex;
+  background-color: var(--surface-gray);
+  border-radius: var(--radius-full);
+  padding: 4px;
+}
+
+.tab {
+  border: none;
+  background: transparent;
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.tab.active {
+  background-color: #fff;
+  color: #000;
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-area {
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.chart-bars {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 200px;
+  padding: 0 var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.bar-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 100%;
+}
+
+.bar {
+  width: 40px;
+  background: linear-gradient(180deg, var(--accent-light-green) 0%, var(--accent-blue) 100%);
+  border-radius: var(--radius-full);
+  opacity: 0.4;
+  transition: opacity 0.3s, height 0.5s ease-out;
+}
+
+.bar:hover {
+  opacity: 0.8;
+}
+
+/* For matching closely the image gradient */
+.bar:nth-child(even) {
+  opacity: 0.6;
+}
+
+.chart-labels {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0 var(--spacing-md);
+}
+
+/* Light Theme Dashboard */
+[data-theme='light'] .main-dial-card {
+  background: #ffffff;
+  background-image: radial-gradient(circle at center, #f0fdf4 0%, transparent 70%);
+  border: 1px solid #f1f5f9;
+}
+
+[data-theme='light'] .chart-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+}
+
+[data-theme='light'] .tab.active {
+  background-color: #ffffff;
+  color: #1e293b;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+[data-theme='light'] .top-nav-item {
+  color: #64748b;
+}
+
+[data-theme='light'] .top-nav-item.active {
+  color: #0ea5e9;
+}

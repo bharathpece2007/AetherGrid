@@ -1,0 +1,189 @@
+.status-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.status-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-body {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-sm);
+  margin-top: -8px; /* tighter spacing for the huge number */
+}
+
+.value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+.unit {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.status-subtitle {
+  font-size: 0.75rem;
+  font-weight: 500;
+  max-width: 80%;
+  line-height: 1.4;
+}
+
+.text-xs {
+  font-size: 0.7rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+/* Progress bar inside cards */
+.progress-bar-container {
+  height: 4px;
+  background-color: var(--surface-gray);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin: 4px 0;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: var(--radius-full);
+}
+
+/* Dark Card Variant */
+.dark-card {
+  position: relative;
+  background-color: var(--surface-dark);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  box-shadow: 0 10px 20px rgba(11, 19, 32, 0.2);
+}
+
+.dark-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+  padding: 2px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-green));
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}
+
+.dark-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.icon-wrapper {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blue-bg {
+  background-color: var(--accent-blue);
+}
+
+.dark-card h3 {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  flex: 1;
+}
+
+.custom-toggle {
+  width: 44px;
+  height: 24px;
+  background-color: var(--accent-blue);
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+}
+
+.toggle-thumb {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+.dark-card-text {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #8c9baf;
+}
+
+.dark-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: var(--spacing-md);
+  font-size: 0.85rem;
+}
+
+.footer-label {
+  color: #8c9baf;
+}
+
+/* Light Theme StatusCard */
+[data-theme='light'] .dark-card {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme='light'] .dark-card h3 {
+  color: #1e293b;
+}
+
+[data-theme='light'] .dark-card-text {
+  color: #64748b;
+}
+
+[data-theme='light'] .footer-label {
+  color: #94a3b8;
+}
+
+[data-theme='light'] .surface-card {
+  background-color: #ffffff;
+  border: 1px solid #f1f5f9;
+}
