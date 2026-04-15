@@ -1,39 +1,44 @@
 import React from 'react';
 import './EnergyDial.css';
 
-const EnergyDial = ({ title, percentage, color = 'var(--primary)' }) => {
-  const radius = 60;
+const EnergyDial = ({ title, percentage, color = 'var(--primary)', unit = '%' }) => {
+  const radius = 80;
   const circumference = 2 * Math.PI * radius;
-  const dashoffset = circumference - (percentage / 100) * circumference;
+  // Calculate dash offset based on percentage logic for a 3/4 circle
+  const dashoffset = circumference - (percentage * 10 / 100) * circumference;
 
   return (
     <div className="energy-dial-container">
-      <h3 className="dial-title">{title}</h3>
+      {title && <h3 className="dial-title">{title}</h3>}
       <div className="dial-wrapper">
-        <svg fill="transparent" width="160" height="160" viewBox="0 0 160 160">
+        <svg fill="transparent" width="220" height="220" viewBox="0 0 220 220">
           <circle
             className="dial-bg"
-            cx="80"
-            cy="80"
+            cx="110"
+            cy="110"
             r={radius}
-            strokeWidth="12"
+            strokeWidth="14"
+            strokeDasharray={circumference}
+            strokeDashoffset={circumference * 0.25} /* make it a partial circle */
+            strokeLinecap="round"
+            transform="rotate(135 110 110)"
           />
           <circle
             className="dial-progress"
-            cx="80"
-            cy="80"
+            cx="110"
+            cy="110"
             r={radius}
-            strokeWidth="12"
+            strokeWidth="14"
             stroke={color}
             strokeDasharray={circumference}
             strokeDashoffset={dashoffset}
             strokeLinecap="round"
-            transform="rotate(-90 80 80)"
+            transform="rotate(135 110 110)"
           />
         </svg>
         <div className="dial-content">
-          <span className="dial-value display-num">{percentage}</span>
-          <span className="dial-percent">%</span>
+          <span className="dial-value display-num font-bold">{percentage}</span>
+          <span className="dial-unit">{unit}</span>
         </div>
       </div>
     </div>

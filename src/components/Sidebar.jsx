@@ -1,30 +1,49 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Activity, LayoutDashboard, Settings, Bolt } from 'lucide-react';
+import { Grid, Shield, Layout, Settings, HelpCircle, Zap } from 'lucide-react';
 import './Sidebar.css';
 
 const Sidebar = () => {
   return (
-    <aside className="sidebar surface-lowest ghost-border">
-      <div className="sidebar-header">
-        <Bolt className="brand-icon" size={32} />
-        <span className="brand-text">Kinetic Grid</span>
+    <aside className="sidebar">
+      <div className="sidebar-brand">
+        <div className="brand-logo">
+          <Zap size={20} color="#000" fill="#000" />
+        </div>
+        <div className="brand-info">
+          <h2 className="brand-title">Grid Control</h2>
+          <span className="brand-subtitle">VPP Node 042</span>
+        </div>
       </div>
       
       <nav className="sidebar-nav">
         <NavLink to="/" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>
-          <LayoutDashboard size={20} />
-          <span>Dashboard</span>
+          <Grid size={18} />
+          <span>User Dashboard</span>
         </NavLink>
-        <NavLink to="/nodes" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>
-          <Activity size={20} />
-          <span>Live Nodes</span>
+        <NavLink to="/admin" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>
+          <Shield size={18} />
+          <span>Admin Center</span>
         </NavLink>
-        <NavLink to="/settings" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>
-          <Settings size={20} />
-          <span>Settings</span>
+        <NavLink to="/explorer" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>
+          <Layout size={18} />
+          <span>System Explorer</span>
         </NavLink>
       </nav>
+
+      <div className="sidebar-bottom">
+        <button className="btn-switch-role">Switch Role</button>
+        <nav className="sidebar-nav bottom-nav">
+          <NavLink to="/settings" className="nav-item">
+            <Settings size={18} />
+            <span>Settings</span>
+          </NavLink>
+          <NavLink to="/support" className="nav-item">
+            <HelpCircle size={18} />
+            <span>Support</span>
+          </NavLink>
+        </nav>
+      </div>
     </aside>
   );
 };

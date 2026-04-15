@@ -3,10 +3,7 @@
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-md);
-  padding: var(--spacing-lg);
-  background-color: var(--surface-container-lowest);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-ambient);
+  /* remove bg color and shadow since image implies it's transparent inside the large card */
 }
 
 .dial-title {
@@ -24,15 +21,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 160px;
-  height: 160px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
-  background-color: var(--surface-container-low);
-  box-shadow: var(--shadow-neumorphic);
+  border: 1px dashed rgba(0,0,0,0.05); /* very subtle outer dashed ring */
 }
 
 .dial-bg {
-  stroke: var(--surface-container-high);
+  stroke: var(--surface-gray);
 }
 
 .dial-progress {
@@ -42,20 +38,23 @@
 .dial-content {
   position: absolute;
   display: flex;
-  align-items: baseline;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   gap: 2px;
 }
 
 .dial-value {
-  font-size: 2.5rem;
+  font-size: 3.5rem;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--text-main);
   line-height: 1;
 }
 
-.dial-percent {
-  font-size: 1rem;
-  font-weight: 600;
+.dial-unit {
+  font-size: 0.75rem;
+  font-weight: 700;
   color: var(--text-muted);
+  font-family: var(--font-body);
+  letter-spacing: 1px;
 }
