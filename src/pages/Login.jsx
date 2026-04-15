@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Lock, UserCircle2 } from 'lucide-react';
 import ParticleBackground from '../components/ParticleBackground';
@@ -6,11 +6,20 @@ import './Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
+  const [userId, setUserId] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Simulate login and navigate to dashboard
-    navigate('/');
+    // Role-based logic
+    if (userId === '11') {
+      navigate('/');
+    } else if (userId === '22') {
+      navigate('/admin');
+    } else {
+      // Default fallback
+      navigate('/');
+    }
   };
 
   return (
@@ -36,12 +45,24 @@ const Login = () => {
         <form className="login-form" onSubmit={handleLogin}>
           
           <div className="input-group">
-            <input type="text" placeholder="User ID" required />
+            <input 
+              type="text" 
+              placeholder="User ID" 
+              value={userId}
+              onChange={(e) => setUserId(e.target.value)}
+              required 
+            />
             <User size={20} className="input-icon" />
           </div>
 
           <div className="input-group">
-            <input type="password" placeholder="Password" required />
+            <input 
+              type="password" 
+              placeholder="Password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required 
+            />
             <Lock size={20} className="input-icon" />
           </div>
 

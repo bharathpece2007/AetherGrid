@@ -12,6 +12,14 @@ function App() {
         {/* Main Dashboard route */}
         <Route index element={<Dashboard />} />
         
+        {/* Admin Center route */}
+        <Route path="admin" element={
+          <div className="surface-card" style={{padding: '24px'}}>
+            <h2>Admin Command Center</h2>
+            <p style={{color: 'var(--text-secondary)'}}>Welcome to the administrative portal.</p>
+          </div>
+        } />
+        
         {/* Placeholder routes for future features */}
         <Route path="nodes" element={<div className="surface-card">Nodes page placeholder</div>} />
         <Route path="settings" element={<div className="surface-card">Settings page placeholder</div>} />
