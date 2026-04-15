@@ -112,31 +112,31 @@
 
 /* Light Theme Sidebar */
 [data-theme='light'] .sidebar {
-  background-color: #ffffff;
-  color: #64748b;
-  border-right: 1px solid #e2e8f0;
+  background-color: var(--sidebar-bg);
+  color: var(--text-muted);
+  border-right: 1px solid var(--surface-gray);
 }
 
 [data-theme='light'] .brand-title {
-  color: #1e293b;
+  color: var(--text-main);
 }
 
 [data-theme='light'] .brand-subtitle {
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 [data-theme='light'] .nav-item:hover {
-  background-color: #f1f5f9;
-  color: #1e293b;
+  background-color: var(--sidebar-hover);
+  color: var(--text-main);
 }
 
 [data-theme='light'] .nav-item.active {
-  color: #059669;
-  background-color: #f0fdf4;
+  color: var(--accent-green);
+  background-color: var(--accent-light-green);
 }
 
 [data-theme='light'] .nav-item.active::after {
-  background-color: #059669;
+  background-color: var(--accent-green);
 }
 
 [data-theme='light'] .btn-switch-role {

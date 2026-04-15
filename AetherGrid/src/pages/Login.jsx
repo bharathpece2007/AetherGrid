@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Mail, Shield, UserRound } from 'lucide-react';
+import { supabase } from '../supabaseClient';
 import './Login.css';
 
 function Login() {
@@ -9,17 +10,51 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (role === 'admin') {
+    
+    // Safety check: Fallback if Supabase is offline/unconfigured
+    if (!supabase) {
+      console.warn("Supabase is not configured. Falling back to local check.");
+      if (email === '1' && password === '1') {
+        localStorage.setItem('userRole', 'user');
+        localStorage.setItem('userName', 'User');
+        localStorage.setItem('userEmail', email);
+        navigate('/user/dashboard');
+        return;
+      }
+      if (email === '2' && password === '2') {
+        localStorage.setItem('userRole', 'admin');
+        localStorage.setItem('userName', 'Admin User');
+        localStorage.setItem('userEmail', email);
+        navigate('/admin/dashboard');
+        return;
+      }
+      alert("Supabase is offline. Use '1/1' or '2/2' for local testing.");
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('username', email)
+      .eq('password', password)
+      .single();
+
+    if (error || !data) {
+      alert("Invalid credentials. Try '1' for User or '2' for Admin.");
+      return;
+    }
+
+    if (data.role === 'admin') {
       localStorage.setItem('userRole', 'admin');
       localStorage.setItem('userName', 'Admin User');
-      localStorage.setItem('userEmail', email || 'admin@aethergrid.com');
+      localStorage.setItem('userEmail', email);
       navigate('/admin/dashboard');
     } else {
       localStorage.setItem('userRole', 'user');
       localStorage.setItem('userName', 'User');
-      localStorage.setItem('userEmail', email || 'user@aethergrid.com');
+      localStorage.setItem('userEmail', email);
       navigate('/user/dashboard');
     }
   };
@@ -45,7 +80,7 @@ function Login() {
             <div className="field">
               <Mail size={16} />
               <input
-                type="email"
+                type="text"
                 required
                 placeholder={role === 'admin' ? 'admin@aethergrid.io' : 'user@aethergrid.io'}
                 value={email}

@@ -14,6 +14,7 @@ import AdminDERManagement from '../pages/AdminDERManagement';
 import AdminForecastAI from '../pages/AdminForecastAI';
 import AdminEnergyDistribution from '../pages/AdminEnergyDistribution';
 import AdminResilience from '../pages/AdminResilience';
+import AdminDataset from '../pages/AdminDataset';
 
 import { Bell, User, CloudRain, Sun, Moon, Link as LinkIcon, Shield, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -49,23 +50,25 @@ const DashboardLayout = () => {
   // Render main content dynamically based on activeTab
   const renderContent = () => {
     // Shared user dash
-    if (activeTab === 'overview') return <Dashboard role={role} />;
+    // Shared user dash
+    if (activeTab === 'overview') return <Dashboard role={role} theme={theme} />;
     
     // User Tabs
-    if (activeTab === 'energy-flow') return <EnergyFlow />;
-    if (activeTab === 'battery') return <BatteryTab />;
-    if (activeTab === 'smart-control') return <SmartControl />;
-    if (activeTab === 'energy-sharing') return <EnergySharing />;
-    if (activeTab === 'weather-alerts') return <WeatherAlerts />;
+    if (activeTab === 'energy-flow') return <EnergyFlow theme={theme} />;
+    if (activeTab === 'battery') return <BatteryTab theme={theme} />;
+    if (activeTab === 'smart-control') return <SmartControl theme={theme} />;
+    if (activeTab === 'energy-sharing') return <EnergySharing theme={theme} />;
+    if (activeTab === 'weather-alerts') return <WeatherAlerts theme={theme} />;
 
     // Admin Tabs
-    if (activeTab === 'grid-overview') return <AdminOverview />;
-    if (activeTab === 'live-monitoring') return <AdminLiveMonitoring />;
-    if (activeTab === 'control-center') return <AdminControlCenter />;
-    if (activeTab === 'der-management') return <AdminDERManagement />;
-    if (activeTab === 'forecast-ai') return <AdminForecastAI />;
-    if (activeTab === 'energy-distribution') return <AdminEnergyDistribution />;
-    if (activeTab === 'resilience') return <AdminResilience />;
+    if (activeTab === 'grid-overview') return <AdminOverview theme={theme} />;
+    if (activeTab === 'live-monitoring') return <AdminLiveMonitoring theme={theme} />;
+    if (activeTab === 'control-center') return <AdminControlCenter theme={theme} />;
+    if (activeTab === 'der-management') return <AdminDERManagement theme={theme} />;
+    if (activeTab === 'forecast-ai') return <AdminForecastAI theme={theme} />;
+    if (activeTab === 'energy-distribution') return <AdminEnergyDistribution theme={theme} />;
+    if (activeTab === 'resilience') return <AdminResilience theme={theme} />;
+    if (activeTab === 'dataset') return <AdminDataset theme={theme} />;
 
     // Fallback
     return null;

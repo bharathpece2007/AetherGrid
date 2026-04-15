@@ -1,12 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Zap, Sun, BatteryFull, Activity, 
   ArrowDownRight, ArrowUpRight, Cloud, CheckCircle, Lightbulb
 } from 'lucide-react';
+import { supabase } from '../supabaseClient';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import './EnergyFlow.css';
 
-const EnergyFlow = () => {
+const EnergyFlow = ({ theme }) => {
   const [autoOptimize, setAutoOptimize] = useState(true);
+  const [chartData, setChartData] = useState([]);
+
+  useEffect(() => {
+    // 1. Plot real dataset using AI-structured query fetching history ranges
+    const fetchDataset = async () => {
+      if (!supabase) {
+        console.warn("Supabase not initialized. Using procedural data baseline.");
+        setChartData([
+          { time: '00:00', home: 218, solar: 78, battery: 46 },
+          { time: '04:00', home: 120, solar: 65, battery: 22 },
+          { time: '08:00', home: 320, solar: 116, battery: 56 },
+          { time: '12:00', home: 450, solar: 300, battery: 85 },
+          { time: '16:00', home: 380, solar: 220, battery: 72 },
+          { time: '20:00', home: 550, solar: 20, battery: 40 },
+          { time: '24:00', home: 210, solar: 0, battery: 30 }
+        ]);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('energy_logs')
+        .select('timestamp, usage_kw, generation_kw, battery_level')
+        .order('timestamp', { ascending: true })
+        .limit(24);
+      if (data && data.length > 0) {
+        const parsed = data.map(d => ({
+          time: new Date(d.timestamp).getHours() + ':00',
+          home: d.usage_kw,
+          solar: d.generation_kw,
+          battery: d.battery_level
+        }));
+        setChartData(parsed);
+      } else {
+        // Fallback UI data
+        setChartData([
+          { time: '00:00', home: 218, solar: 78, battery: 46 },
+          { time: '04:00', home: 120, solar: 65, battery: 22 },
+          { time: '08:00', home: 320, solar: 116, battery: 56 },
+          { time: '12:00', home: 450, solar: 300, battery: 85 },
+          { time: '16:00', home: 380, solar: 220, battery: 72 },
+          { time: '20:00', home: 550, solar: 20, battery: 40 },
+          { time: '24:00', home: 210, solar: 0, battery: 30 }
+        ]);
+      }
+    };
+    fetchDataset();
+  }, []);
 
   return (
     <div className="energy-flow-container fade-in">
@@ -15,7 +64,7 @@ const EnergyFlow = () => {
       <div className="tab-header">
         <div className="header-text">
           <h1>Energy Flow</h1>
-          <p>Real-time energy distribution</p>
+          <p>Real-time dataset visualization</p>
         </div>
         <div className="header-actions">
           <div className="status-badge live">
@@ -73,18 +122,31 @@ const EnergyFlow = () => {
         {/* Left Section: Chart */}
         <div className="flow-left-section flex-col gap-lg">
           <div className="surface-card p-xl">
-            <h3>24h Trends</h3>
-            <div className="trends-chart-mockup">
-               {/* 3 lines mimicking solar, battery, consumption */}
-               <svg viewBox="0 0 100 50" className="chart-svg">
-                 <path d="M0,45 C20,40 30,10 50,5 C70,10 80,40 100,45" fill="none" stroke="var(--accent-yellow)" strokeWidth="2" />
-                 <path d="M0,40 C20,35 40,35 60,30 C80,25 90,20 100,10" fill="none" stroke="var(--accent-blue)" strokeWidth="2" />
-                 <path d="M0,20 C10,25 30,30 50,25 C70,20 90,30 100,25" fill="none" stroke="var(--accent-green)" strokeWidth="2" strokeDasharray="4" />
-               </svg>
-               <div className="chart-legend">
-                 <span><span className="dot bg-yellow"></span> Solar</span>
-                 <span><span className="dot bg-blue"></span> Home</span>
-                 <span><span className="dot bg-green"></span> Battery</span>
+            <h3>24h Real-time Overlay Plot</h3>
+            <div className="trends-chart-mockup" style={{ height: '220px', marginLeft: '-20px' }}>
+               <ResponsiveContainer width="100%" height="100%">
+                 <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                   <defs>
+                     <linearGradient id="colorHome" x1="0" y1="0" x2="0" y2="1">
+                       <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4}/>
+                       <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
+                     </linearGradient>
+                     <linearGradient id="colorSolar" x1="0" y1="0" x2="0" y2="1">
+                       <stop offset="5%" stopColor="#eab308" stopOpacity={0.4}/>
+                       <stop offset="95%" stopColor="#eab308" stopOpacity={0}/>
+                     </linearGradient>
+                   </defs>
+                   <XAxis dataKey="time" stroke={theme === 'dark' ? '#8c9baf' : '#64748b'} fontSize={11} tickLine={false} axisLine={false} />
+                   <Tooltip contentStyle={{ backgroundColor: theme === 'dark' ? '#122136' : '#ffffff', border: 'none', borderRadius: '8px', color: theme === 'dark' ? '#fff' : '#000', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                   <Area type="monotone" dataKey="home" stroke="#0ea5e9" strokeWidth={3} fillOpacity={1} fill="url(#colorHome)" />
+                   <Area type="monotone" dataKey="solar" stroke="#eab308" strokeWidth={3} fillOpacity={1} fill="url(#colorSolar)" />
+                 </AreaChart>
+               </ResponsiveContainer>
+               
+               <div className="chart-legend mt-sm" style={{ paddingLeft: '20px' }}>
+                 <span><span className="dot bg-yellow"></span> Solar kW</span>
+                 <span><span className="dot bg-blue"></span> Home kW</span>
+                 <span><span className="dot bg-green"></span> Battery %</span>
                </div>
             </div>
           </div>

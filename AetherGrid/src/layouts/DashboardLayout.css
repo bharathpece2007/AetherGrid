@@ -173,33 +173,33 @@
 
 /* Theme specifics */
 [data-theme='light'] .layout-main {
-  background-color: #f3f5f9;
+  background-color: var(--bg-color);
 }
 
 [data-theme='light'] .top-header {
-  background-color: #fff;
-  border-bottom: 1px solid #e2e8f0;
+  background-color: var(--sidebar-bg);
+  border-bottom: 1px solid var(--surface-gray);
   color: var(--text-main);
 }
 
 [data-theme='light'] .header-chip {
-  background-color: #f1f5f9;
-  color: #64748b;
+  background-color: var(--surface-gray);
+  color: var(--text-muted);
 }
 
 [data-theme='light'] .icon-btn {
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 [data-theme='light'] .icon-btn:hover {
-  background-color: #f1f5f9;
+  background-color: var(--surface-gray);
   color: var(--text-main);
 }
 
 [data-theme='light'] .profile-dropdown {
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  background: var(--surface-white);
+  border: 1px solid var(--surface-gray);
+  box-shadow: var(--shadow-sm);
 }
 
 [data-theme='light'] .user-name {
@@ -207,10 +207,10 @@
 }
 
 [data-theme='light'] .dropdown-item {
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 [data-theme='light'] .dropdown-item:hover {
-  background: #f1f5f9;
+  background: var(--surface-gray);
   color: var(--text-main);
 }

@@ -1,22 +1,22 @@
 :root {
-  /* Colors */
-  --bg-color: #f3f5f9;
-  --sidebar-bg: #0b1320; /* Deep navy from image */
+  /* Default: DARK THEME */
+  --bg-color: #0b1320;
+  --sidebar-bg: #060b13;
   --sidebar-hover: rgba(255, 255, 255, 0.05);
   
-  --primary: #0095cd; /* Cyan blue */
-  --accent-green: #00D084; /* Bright green text/buttons */
-  --accent-light-green: #bbf7d0; /* progress bar background */
-  --accent-blue: #0ea5e9;
+  --primary: #0ea5e9;
+  --accent-green: #00D084;
+  --accent-light-green: rgba(0, 208, 132, 0.2);
+  --accent-blue: #38bdf8;
   
-  --surface-white: #ffffff;
-  --surface-gray: #f9fafb;
-  --surface-dark: #122136; /* Reduce usage card */
+  --surface-white: #122136;
+  --surface-gray: #1e293b;
+  --surface-dark: #0f172a;
   
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --text-light: #f8fafc;
-  --text-danger: #ef4444;
+  --text-main: #f8fafc;
+  --text-muted: #8c9baf;
+  --text-light: #ffffff;
+  --text-danger: #fb7185;
 
   /* Typography */
   --font-display: 'Space Grotesk', system-ui, sans-serif;
@@ -47,23 +47,22 @@
   box-sizing: border-box;
 }
 
-/* Light Theme Overrides */
+/* Light Theme Overrides (Whole White) */
 [data-theme='light'] {
-  --bg-color: #f3f5f9;
-  --sidebar-bg: #ffffff;
+  --bg-color: #ffffff;
+  --sidebar-bg: #f8fafc;
   --sidebar-hover: rgba(0, 0, 0, 0.04);
 
   --surface-white: #ffffff;
   --surface-gray: #f1f5f9;
   --surface-dark: #e2e8f0;
 
-  --text-main: #1e293b;
+  --text-main: #020617;
   --text-muted: #64748b;
-  --text-light: #0f172a;
+  --text-light: #000000;
 
   --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.06);
-  --shadow-dial: -10px -10px 20px #ffffff, 10px 10px 20px rgba(0,0,0,0.06);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
 
 body {

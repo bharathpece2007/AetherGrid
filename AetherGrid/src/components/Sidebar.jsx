@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   Grid, Shield, Layout, Settings, Zap, 
-  Activity, Navigation, Sun, Wind, CloudRain, ShieldAlert
+  Activity, Navigation, Sun, Wind, CloudRain, ShieldAlert, Database
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -13,7 +13,8 @@ const Sidebar = ({ role, activeTab, setActiveTab }) => {
     { id: 'der-management', label: 'DER Management', icon: Zap },
     { id: 'forecast-ai', label: 'Forecast & AI', icon: Layout },
     { id: 'energy-distribution', label: 'Energy Distribution', icon: Wind },
-    { id: 'resilience', label: 'Resilience', icon: ShieldAlert }
+    { id: 'resilience', label: 'Resilience', icon: ShieldAlert },
+    { id: 'dataset', label: 'Dataset Explorer', icon: Database }
   ];
 
   const userTabs = [
