@@ -12,25 +12,26 @@ function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // HACKATHON PRIORITY BYPASS: Ensure 1/1 and 2/2 always work for the demo
+    if (email === '1' && password === '1') {
+      localStorage.setItem('userRole', 'user');
+      localStorage.setItem('userName', 'Demo User');
+      localStorage.setItem('userEmail', 'user@aethergrid.io');
+      navigate('/user/dashboard');
+      return;
+    }
+    if (email === '2' && password === '2') {
+      localStorage.setItem('userRole', 'admin');
+      localStorage.setItem('userName', 'Admin Controller');
+      localStorage.setItem('userEmail', 'admin@aethergrid.io');
+      navigate('/admin/dashboard');
+      return;
+    }
     
-    // Safety check: Fallback if Supabase is offline/unconfigured
+    // Standard Supabase Logic for other users
     if (!supabase) {
-      console.warn("Supabase is not configured. Falling back to local check.");
-      if (email === '1' && password === '1') {
-        localStorage.setItem('userRole', 'user');
-        localStorage.setItem('userName', 'User');
-        localStorage.setItem('userEmail', email);
-        navigate('/user/dashboard');
-        return;
-      }
-      if (email === '2' && password === '2') {
-        localStorage.setItem('userRole', 'admin');
-        localStorage.setItem('userName', 'Admin User');
-        localStorage.setItem('userEmail', email);
-        navigate('/admin/dashboard');
-        return;
-      }
-      alert("Supabase is offline. Use '1/1' or '2/2' for local testing.");
+      alert("Supabase not connected. Use '1' or '2' for demo.");
       return;
     }
 
@@ -42,18 +43,18 @@ function Login() {
       .single();
 
     if (error || !data) {
-      alert("Invalid credentials. Try '1' for User or '2' for Admin.");
+      alert("Invalid credentials. Use USN '1' for User or '2' for Admin.");
       return;
     }
 
     if (data.role === 'admin') {
       localStorage.setItem('userRole', 'admin');
-      localStorage.setItem('userName', 'Admin User');
+      localStorage.setItem('userName', data.username);
       localStorage.setItem('userEmail', email);
       navigate('/admin/dashboard');
     } else {
       localStorage.setItem('userRole', 'user');
-      localStorage.setItem('userName', 'User');
+      localStorage.setItem('userName', data.username);
       localStorage.setItem('userEmail', email);
       navigate('/user/dashboard');
     }
@@ -72,17 +73,17 @@ function Login() {
         </div>
 
         <h1>{role === 'admin' ? 'Admin Control Login' : 'User Energy Login'}</h1>
-        <p>Secure access to the AetherGrid command environment.</p>
+        <p>Enter your credentials to access the AetherGrid portal.</p>
 
         <form onSubmit={handleSubmit}>
           <label>
-            Email
+            Username / USN
             <div className="field">
               <Mail size={16} />
               <input
                 type="text"
                 required
-                placeholder={role === 'admin' ? 'admin@aethergrid.io' : 'user@aethergrid.io'}
+                placeholder={role === 'admin' ? 'Login ID' : 'Student/User USN'}
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
               />
@@ -96,7 +97,7 @@ function Login() {
               <input
                 type="password"
                 required
-                placeholder="Enter your password"
+                placeholder="••••••••"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
               />

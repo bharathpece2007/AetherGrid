@@ -40,6 +40,36 @@ CREATE TABLE IF NOT EXISTS energy_logs (
     stability_status INTEGER
 );
 
--- Note: To upload your CSV file quickly, you can use the Supabase web interface:
--- Go to Table Editor -> Select 'energy_logs' -> "Insert" -> "Import data from CSV"
--- Make sure the columns map perfectly to the ones above!
+-- 3. Create Solar Data table
+CREATE TABLE IF NOT EXISTS solar_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    module_temp FLOAT,
+    amb_temp FLOAT,
+    wind_speed FLOAT,
+    irradiation FLOAT,
+    dc_current FLOAT,
+    ac_power FLOAT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 4. Create DER Registry table
+CREATE TABLE IF NOT EXISTS der_registry (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    node_id TEXT UNIQUE,
+    zone TEXT,
+    capacity TEXT,
+    load_kw TEXT,
+    status TEXT,
+    region TEXT,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Insert initial DER nodes
+INSERT INTO der_registry (node_id, zone, capacity, load_kw, status, region) VALUES
+('ND-0842', 'Mysuru North', '150kW', '122kW', 'Online', 'Sector 4'),
+('ND-2219', 'Hebbal Sub.', '450kW', '410kW', 'Stressed', 'Sector 2'),
+('ND-1104', 'Chamundi Hills', '80kW', '12kW', 'Online', 'Sector 9'),
+('ND-5582', 'Siddhartha Lyut', '210kW', '185kW', 'Warning', 'Sector 5')
+ON CONFLICT (node_id) DO NOTHING;
+
+-- Note: You should now run 'node upload_all_data.js' to populate these tables from your CSVs.

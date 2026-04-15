@@ -6,15 +6,21 @@ const EnergySharing = () => {
   const [autoTrade, setAutoTrade] = useState(true);
 
   return (
-    <div className="energy-sharing-container fade-in">
-      <div className="tab-header mb-lg">
+    <div className="admin-tab-container fade-slide-up">
+      <div className="tab-header mb-xl flex justify-between items-center">
         <div>
           <h1>Energy Sharing</h1>
-          <p className="text-muted">P2P neighborhood marketplace exchange</p>
+          <p className="text-muted">P2P neighborhood marketplace exchange.</p>
         </div>
-        <div className="live-price-flag">
-          <span className="price-label">Current Grid Rate:</span>
-          <span className="price-value">$0.18 <span className="price-unit">/ kWh</span></span>
+        <div className="flex items-center gap-xl">
+          <div className="live-price-flag bg-blue-subtle px-xl py-md rounded-2xl flex flex-col items-end">
+             <span className="text-[10px] font-black tracking-widest uppercase text-muted">Grid [Rate]</span>
+             <span className="text-xl font-black text-blue">$0.18 <span className="text-xs">/ kWh</span></span>
+          </div>
+          <div className="status-badge live admin-pulse">
+            <span className="dot pulse bg-blue"></span>
+            Market Open
+          </div>
         </div>
       </div>
 

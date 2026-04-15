@@ -58,20 +58,17 @@ const EnergyFlow = ({ theme }) => {
   }, []);
 
   return (
-    <div className="energy-flow-container fade-in">
+    <div className="admin-tab-container fade-slide-up">
       
       {/* 1. Header */}
-      <div className="tab-header">
-        <div className="header-text">
+      <div className="tab-header mb-xl flex justify-between items-center">
+        <div>
           <h1>Energy Flow</h1>
-          <p>Real-time dataset visualization</p>
+          <p className="text-muted">Real-time dataset visualization and system telemetry.</p>
         </div>
-        <div className="header-actions">
-          <div className="status-badge live">
-            <span className="dot pulse"></span>
-            Live Status
-          </div>
-          <div className="optimize-toggle">
+        <div className="flex items-center gap-xl">
+          <div className="optimize-toggle flex items-center gap-md">
+            <span className="text-xs font-bold uppercase tracking-widest text-muted">Auto Optimize</span>
             <label className="toggle-switch">
               <input 
                 type="checkbox" 
@@ -80,7 +77,10 @@ const EnergyFlow = ({ theme }) => {
               />
               <span className="slider"></span>
             </label>
-            <span>Auto Optimize</span>
+          </div>
+          <div className="status-badge live admin-pulse">
+            <span className="dot pulse bg-blue"></span>
+            Live Status
           </div>
         </div>
       </div>

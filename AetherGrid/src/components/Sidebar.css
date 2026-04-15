@@ -1,13 +1,14 @@
 .sidebar {
-  width: 260px;
-  background-color: var(--sidebar-bg);
-  color: #8c9baf; /* Muted nav text */
+  width: 280px;
+  background-color: #000000;
+  color: #8c9baf;
   display: flex;
   flex-direction: column;
   height: 100vh;
   position: sticky;
   top: 0;
   padding-top: var(--spacing-xl);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .sidebar-brand {
@@ -18,13 +19,14 @@
 }
 
 .brand-logo {
-  background-color: var(--accent-green);
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-full);
+  background: #BAB86C;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0 15px rgba(186, 184, 108, 0.4);
 }
 
 .brand-info {
@@ -34,52 +36,50 @@
 
 .brand-title {
   color: #fff;
-  font-size: 1rem;
-  letter-spacing: -0.02em;
-}
-
-.brand-subtitle {
-  font-size: 0.75rem;
-  color: #64748b;
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
+  padding: 0 var(--spacing-md);
+  gap: var(--spacing-md);
 }
 
 .nav-item {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  padding: 12px var(--spacing-lg);
-  color: inherit;
+  padding: 14px 24px;
+  color: #8c9baf;
   text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  position: relative;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  background: transparent;
 }
 
 .nav-item:hover {
-  background-color: var(--sidebar-hover);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+  transform: translateX(4px);
 }
 
 .nav-item.active {
-  color: var(--accent-green);
-  background-color: rgba(0, 208, 132, 0.05); /* very subtle green tint */
+  background: rgba(186, 184, 108, 0.08);
+  color: #BAB86C;
+  border: 2px solid #BAB86C;
+  box-shadow: 0 0 20px rgba(186, 184, 108, 0.2);
 }
 
-/* Green active edge line */
-.nav-item.active::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background-color: var(--accent-green);
-  border-radius: 3px 0 0 3px;
+.nav-item.active svg {
+  color: #BAB86C;
+  filter: drop-shadow(0 0 8px rgba(186, 184, 108, 0.6));
 }
 
 .sidebar-bottom {

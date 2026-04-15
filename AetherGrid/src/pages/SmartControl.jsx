@@ -39,16 +39,21 @@ const SmartControl = () => {
   const [washState, setWashState] = useState(false);
 
   return (
-    <div className="smart-control-container fade-in">
-      <div className="tab-header mb-lg">
+    <div className="admin-tab-container fade-slide-up">
+      <div className="tab-header mb-xl flex justify-between items-center">
         <div>
           <h1>Smart Control</h1>
-          <p className="text-muted">Automated demand-side reduction configuration</p>
+          <p className="text-muted">Automated demand-side reduction configuration.</p>
         </div>
-        <div className="incentive-badge">
-          <span className="label">Earned this Month:</span>
-          <span className="value text-green">₹ 2,450</span>
-          <span className="sub">via Grid Relief</span>
+        <div className="flex items-center gap-xl">
+          <div className="incentive-badge bg-green-subtle px-xl py-md rounded-2xl flex flex-col items-end">
+            <span className="text-[10px] font-black tracking-widest uppercase text-muted">Earned [Monthly]</span>
+            <span className="text-xl font-black text-green">₹ 2,450</span>
+          </div>
+          <div className="status-badge live admin-pulse">
+            <span className="dot pulse bg-blue"></span>
+            AI Active
+          </div>
         </div>
       </div>
 
