@@ -28,7 +28,7 @@ const Login = () => {
       <div className="login-card">
         
         {/* Top-Right About Tab */}
-        <div className="about-tab">
+        <div className="about-tab" onClick={() => navigate('/about')} role="button" tabIndex={0}>
           <img 
             src="/elemental-icon.png" 
             alt="Elemental Icon" 

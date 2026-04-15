@@ -143,7 +143,7 @@ const ParticleBackground = () => {
         height: '100%',
         zIndex: 0,
         pointerEvents: 'none',
-        background: '#050505' // Black background
+        background: '#000000' // Changed to pitch black
       }}
     />
   );
