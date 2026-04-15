@@ -146,3 +146,28 @@
 .footer-label {
   color: #8c9baf;
 }
+
+/* Light Theme StatusCard */
+[data-theme='light'] .dark-card {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme='light'] .dark-card h3 {
+  color: #1e293b;
+}
+
+[data-theme='light'] .dark-card-text {
+  color: #64748b;
+}
+
+[data-theme='light'] .footer-label {
+  color: #94a3b8;
+}
+
+[data-theme='light'] .surface-card {
+  background-color: #ffffff;
+  border: 1px solid #f1f5f9;
+}

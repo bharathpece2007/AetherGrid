@@ -58,3 +58,12 @@
   font-family: var(--font-body);
   letter-spacing: 1px;
 }
+
+/* Light Theme EnergyDial */
+[data-theme='light'] .dial-wrapper {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='light'] .dial-bg {
+  stroke: #e2e8f0;
+}

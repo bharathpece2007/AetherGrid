@@ -47,12 +47,32 @@
   box-sizing: border-box;
 }
 
+/* Light Theme Overrides */
+[data-theme='light'] {
+  --bg-color: #f3f5f9;
+  --sidebar-bg: #ffffff;
+  --sidebar-hover: rgba(0, 0, 0, 0.04);
+
+  --surface-white: #ffffff;
+  --surface-gray: #f1f5f9;
+  --surface-dark: #e2e8f0;
+
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #0f172a;
+
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.06);
+  --shadow-dial: -10px -10px 20px #ffffff, 10px 10px 20px rgba(0,0,0,0.06);
+}
+
 body {
   margin: 0;
   font-family: var(--font-body);
   background-color: var(--bg-color);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6, .font-display {

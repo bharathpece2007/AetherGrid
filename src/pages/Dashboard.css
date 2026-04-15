@@ -179,3 +179,29 @@
   font-weight: 500;
   padding: 0 var(--spacing-md);
 }
+
+/* Light Theme Dashboard */
+[data-theme='light'] .main-dial-card {
+  background: #ffffff;
+  background-image: radial-gradient(circle at center, #f0fdf4 0%, transparent 70%);
+  border: 1px solid #f1f5f9;
+}
+
+[data-theme='light'] .chart-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+}
+
+[data-theme='light'] .tab.active {
+  background-color: #ffffff;
+  color: #1e293b;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+[data-theme='light'] .top-nav-item {
+  color: #64748b;
+}
+
+[data-theme='light'] .top-nav-item.active {
+  color: #0ea5e9;
+}

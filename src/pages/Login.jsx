@@ -13,11 +13,19 @@ const Login = () => {
     e.preventDefault();
     // Role-based logic
     if (userId === '11') {
+      localStorage.setItem('userRole', 'user');
+      localStorage.setItem('userName', 'User');
+      localStorage.setItem('userEmail', 'user@aethergrid.com');
       navigate('/');
     } else if (userId === '22') {
+      localStorage.setItem('userRole', 'admin');
+      localStorage.setItem('userName', 'Admin User');
+      localStorage.setItem('userEmail', 'admin@aethergrid.com');
       navigate('/admin');
     } else {
-      // Default fallback
+      localStorage.setItem('userRole', 'guest');
+      localStorage.setItem('userName', 'Guest User');
+      localStorage.setItem('userEmail', 'guest@aethergrid.com');
       navigate('/');
     }
   };

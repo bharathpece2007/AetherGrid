@@ -109,3 +109,36 @@
 .bottom-nav .nav-item.active::after {
   display: none;
 }
+
+/* Light Theme Sidebar */
+[data-theme='light'] .sidebar {
+  background-color: #ffffff;
+  color: #64748b;
+  border-right: 1px solid #e2e8f0;
+}
+
+[data-theme='light'] .brand-title {
+  color: #1e293b;
+}
+
+[data-theme='light'] .brand-subtitle {
+  color: #94a3b8;
+}
+
+[data-theme='light'] .nav-item:hover {
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+[data-theme='light'] .nav-item.active {
+  color: #059669;
+  background-color: #f0fdf4;
+}
+
+[data-theme='light'] .nav-item.active::after {
+  background-color: #059669;
+}
+
+[data-theme='light'] .btn-switch-role {
+  box-shadow: 0 4px 10px rgba(0, 208, 132, 0.15);
+}
