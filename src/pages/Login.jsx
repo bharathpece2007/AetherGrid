@@ -1,90 +1,84 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Lock, UserCircle2 } from 'lucide-react';
-import ParticleBackground from '../components/ParticleBackground';
+import { Lock, Mail, Shield, UserRound } from 'lucide-react';
 import './Login.css';
 
-const Login = () => {
+function Login() {
   const navigate = useNavigate();
-  const [userId, setUserId] = useState('');
+  const [role, setRole] = useState('user');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // Role-based logic
-    if (userId === '11') {
-      localStorage.setItem('userRole', 'user');
-      localStorage.setItem('userName', 'User');
-      localStorage.setItem('userEmail', 'user@aethergrid.com');
-      navigate('/');
-    } else if (userId === '22') {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (role === 'admin') {
       localStorage.setItem('userRole', 'admin');
       localStorage.setItem('userName', 'Admin User');
-      localStorage.setItem('userEmail', 'admin@aethergrid.com');
+      localStorage.setItem('userEmail', email || 'admin@aethergrid.com');
       navigate('/admin');
     } else {
-      localStorage.setItem('userRole', 'guest');
-      localStorage.setItem('userName', 'Guest User');
-      localStorage.setItem('userEmail', 'guest@aethergrid.com');
+      localStorage.setItem('userRole', 'user');
+      localStorage.setItem('userName', 'User');
+      localStorage.setItem('userEmail', email || 'user@aethergrid.com');
       navigate('/');
     }
   };
 
   return (
-    <div className="login-container">
-      <ParticleBackground />
-      <div className="login-card">
-        
-        {/* Top-Right About Tab */}
-        <div className="about-tab" onClick={() => navigate('/about')} role="button" tabIndex={0}>
-          <img 
-            src="/elemental-icon.png" 
-            alt="Elemental Icon" 
-            className="elemental-icon"
-          />
-          <span>About</span>
-        </div>
-
-        {/* Overlapping User Circle */}
-        <div className="user-circle">
-          <UserCircle2 size={56} color="#fff" />
-        </div>
-
-        <form className="login-form" onSubmit={handleLogin}>
-          
-          <div className="input-group">
-            <input 
-              type="text" 
-              placeholder="User ID" 
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-              required 
-            />
-            <User size={20} className="input-icon" />
-          </div>
-
-          <div className="input-group">
-            <input 
-              type="password" 
-              placeholder="Password" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required 
-            />
-            <Lock size={20} className="input-icon" />
-          </div>
-
-          <button type="submit" className="login-btn">
-            LOGIN
+    <div className="login-screen">
+      <div className={`login-shell ${role}`}>
+        <div className="role-toggle" role="tablist" aria-label="Role toggle">
+          <button type="button" className={role === 'user' ? 'active' : ''} onClick={() => setRole('user')}>
+            <UserRound size={16} /> User
           </button>
-          
-          <div className="forgot-password">
-            <span>Forgot </span><a href="#" className="font-bold">Password ?</a>
-          </div>
+          <button type="button" className={role === 'admin' ? 'active' : ''} onClick={() => setRole('admin')}>
+            <Shield size={16} /> Admin
+          </button>
+        </div>
+
+        <h1>{role === 'admin' ? 'Admin Control Login' : 'User Energy Login'}</h1>
+        <p>Secure access to the AetherGrid command environment.</p>
+
+        <form onSubmit={handleSubmit}>
+          <label>
+            Email
+            <div className="field">
+              <Mail size={16} />
+              <input
+                type="email"
+                required
+                placeholder={role === 'admin' ? 'admin@aethergrid.io' : 'user@aethergrid.io'}
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </div>
+          </label>
+
+          <label>
+            Password
+            <div className="field">
+              <Lock size={16} />
+              <input
+                type="password"
+                required
+                placeholder="Enter your password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+            </div>
+          </label>
+
+          <button type="submit" className="submit-btn">
+            Login
+          </button>
         </form>
+
+        <button type="button" className="back-link" onClick={() => navigate('/about')}>
+          Back to About
+        </button>
       </div>
     </div>
   );
-};
+}
 
 export default Login;
