@@ -1,0 +1,54 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-header h2 {
+  margin-bottom: var(--spacing-xs);
+  color: var(--primary);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-xl);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.hero-section {
+  background: linear-gradient(135deg, var(--surface-container-lowest) 0%, var(--surface-container-low) 100%);
+}
+
+.hero-section h1 {
+  color: var(--primary-container);
+  margin-bottom: var(--spacing-md);
+}
+
+.weather-panel {
+  background-color: var(--surface-container-low);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+}
+
+.weather-panel h3 {
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-body);
+  color: var(--text-muted);
+}
+
+.weather-forecast h4 {
+  margin-bottom: var(--spacing-xs);
+  color: var(--primary);
+}

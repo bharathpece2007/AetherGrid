@@ -1,0 +1,67 @@
+.status-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-title {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+}
+
+.indicator-stable {
+  background-color: var(--secondary);
+  box-shadow: 0 0 10px rgba(0, 109, 67, 0.4);
+}
+
+.indicator-stressed {
+  background-color: var(--outline-variant);
+}
+
+.indicator-critical {
+  background-color: var(--error);
+  box-shadow: 0 0 10px rgba(186, 26, 26, 0.4);
+}
+
+.status-body {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-sm);
+}
+
+.value {
+  font-size: 3rem;
+  font-weight: 600;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.unit {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.status-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
