@@ -1,8 +1,28 @@
 import React from 'react';
-import { Lightbulb, CloudLightning, TrendingUp, BarChart2 } from 'lucide-react';
+import { Lightbulb, CloudLightning, TrendingUp, BarChart2, AlertTriangle } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './Admin.css';
 
-const AdminForecastAI = () => {
+const AdminForecastAI = ({ theme }) => {
+  const forecastData = [
+    { hour: 0, load: 140.0 }, { hour: 1, load: 139.5 }, { hour: 2, load: 139.0 },
+    { hour: 3, load: 138.5 }, { hour: 4, load: 138.0 }, { hour: 5, load: 137.5 },
+    { hour: 6, load: 137.0 }, { hour: 7, load: 136.5 }, { hour: 8, load: 136.0 },
+    { hour: 9, load: 135.5 }, { hour: 10, load: 135.0 }, { hour: 11, load: 134.5 },
+    { hour: 12, load: 134.0 }, { hour: 13, load: 132.0 }, { hour: 14, load: 130.0 },
+    { hour: 15, load: 128.0 }, { hour: 16, load: 126.0 }, { hour: 17, load: 124.0 },
+    { hour: 18, load: 122.0 }, { hour: 19, load: 120.0 }, { hour: 20, load: 118.0 },
+    { hour: 21, load: 120.5 }, { hour: 22, load: 123.0 }, { hour: 23, load: 125.5 },
+    { hour: 24, load: 128.0 }, { hour: 25, load: 130.5 }, { hour: 26, load: 133.0 },
+    { hour: 27, load: 135.5 }, { hour: 28, load: 138.0 }, { hour: 29, load: 140.5 },
+    { hour: 30, load: 143.0 }, { hour: 31, load: 145.5 }, { hour: 32, load: 148.0 },
+    { hour: 33, load: 149.2 }, { hour: 34, load: 150.4 }, { hour: 35, load: 151.6 },
+    { hour: 36, load: 152.8 }, { hour: 37, load: 154.0 }, { hour: 38, load: 155.2 },
+    { hour: 39, load: 156.4 }, { hour: 40, load: 157.6 }, { hour: 41, load: 158.8 },
+    { hour: 42, load: 160.0 }, { hour: 43, load: 161.2 }, { hour: 44, load: 162.4 },
+    { hour: 45, load: 163.6 }, { hour: 46, load: 164.8 }, { hour: 47, load: 166.0 }
+  ];
+
   return (
     <div className="admin-tab-container fade-slide-up">
       <div className="tab-header mb-xl">
@@ -19,24 +39,39 @@ const AdminForecastAI = () => {
            <div className="surface-card p-xl bg-surface">
               <div className="flex justify-between items-center mb-md">
                  <h3 className="m-0 flex items-center gap-sm"><BarChart2 size={20} className="text-yellow" /> Load Forecast (48H)</h3>
+                 <div className="flex items-center gap-xs text-red text-xs font-bold uppercase tracking-wider">
+                    <AlertTriangle size={14} /> Spike Detected (H40+)
+                 </div>
               </div>
               <p className="text-sm text-muted mb-lg">Machine learning ensemble predicting multi-directional flow constraints over incoming cold front.</p>
               
-              <div className="ai-mock-chart relative" style={{ height: '300px' }}>
-                 <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
-                   {/* Normal baseline curve */ }
-                   <path d="M0,20 C20,15 40,25 60,10 C80,5 90,30 100,5" fill="none" stroke="var(--border-color)" strokeWidth="1" strokeDasharray="1" />
-                   
-                   {/* AI Prediction curve */ }
-                   <path d="M0,20 C20,22 40,15 60,30 C70,38 80,10 100,10" fill="none" stroke="#eab308" strokeWidth="2" className="draw-path" />
-                   
-                   {/* Danger Zone Highlight */}
-                   <rect x="55" y="25" width="15" height="15" fill="rgba(239, 68, 68, 0.1)" />
-                 </svg>
-                 
-                 <div className="absolute top-[60%] left-[55%] text-xs text-red font-bold font-code bg-darker p-xs rounded shadow-lg transform -translate-y-full -translate-x-1/2">
-                   SPIKE DETECTED
-                 </div>
+              <div style={{ height: '350px', width: '100%' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={forecastData}>
+                    <defs>
+                      <linearGradient id="colorLoad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#eab308" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#eab308" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme === 'dark' ? '#1e293b' : '#e2e8f0'} />
+                    <XAxis dataKey="hour" fontSize={11} stroke="#8c9baf" tickFormatter={(v) => `H${v}`} />
+                    <YAxis fontSize={11} stroke="#8c9baf" domain={['dataMin - 10', 'dataMax + 10']} axisLine={false} tickLine={false} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: theme === 'dark' ? '#000' : '#fff', border: '1px solid #eab308', borderRadius: '8px' }} 
+                      itemStyle={{ color: '#eab308', fontWeight: 'bold' }}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="load" 
+                      stroke="#eab308" 
+                      strokeWidth={3} 
+                      fillOpacity={1} 
+                      fill="url(#colorLoad)" 
+                      animationDuration={1500}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
            </div>
         </div>

@@ -128,8 +128,8 @@ const EnergyFlow = ({ theme }) => {
                  <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                    <defs>
                      <linearGradient id="colorHome" x1="0" y1="0" x2="0" y2="1">
-                       <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4}/>
-                       <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
+                       <stop offset="5%" stopColor="#98bf64" stopOpacity={0.4}/>
+                       <stop offset="95%" stopColor="#98bf64" stopOpacity={0}/>
                      </linearGradient>
                      <linearGradient id="colorSolar" x1="0" y1="0" x2="0" y2="1">
                        <stop offset="5%" stopColor="#eab308" stopOpacity={0.4}/>
@@ -138,7 +138,7 @@ const EnergyFlow = ({ theme }) => {
                    </defs>
                    <XAxis dataKey="time" stroke={theme === 'dark' ? '#8c9baf' : '#64748b'} fontSize={11} tickLine={false} axisLine={false} />
                    <Tooltip contentStyle={{ backgroundColor: theme === 'dark' ? '#122136' : '#ffffff', border: 'none', borderRadius: '8px', color: theme === 'dark' ? '#fff' : '#000', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                   <Area type="monotone" dataKey="home" stroke="#0ea5e9" strokeWidth={3} fillOpacity={1} fill="url(#colorHome)" />
+                   <Area type="monotone" dataKey="home" stroke="#98bf64" strokeWidth={3} fillOpacity={1} fill="url(#colorHome)" />
                    <Area type="monotone" dataKey="solar" stroke="#eab308" strokeWidth={3} fillOpacity={1} fill="url(#colorSolar)" />
                  </AreaChart>
                </ResponsiveContainer>

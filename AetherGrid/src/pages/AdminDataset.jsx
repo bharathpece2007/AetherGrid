@@ -58,20 +58,12 @@ const AdminDataset = ({ theme }) => {
   return (
     <div className="admin-tab-container fade-slide-up">
       <div className="tab-header mb-xl">
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <h1 className="flex items-center gap-md">
             <Database className="text-blue" size={32} />
             CSV Dataset Explorer
           </h1>
           <p className="text-muted">Real-time analytical mapping of the local Smart Grid dataset.</p>
-        </div>
-        <div className="flex gap-md">
-           <button className={`icon-btn ${view === 'visual' ? 'active' : ''}`} onClick={() => setView('visual')} style={{ padding: '8px 16px', borderRadius: '12px', background: view === 'visual' ? 'rgba(14, 165, 233, 0.1)' : 'transparent' }}>
-              Visual Analysis
-           </button>
-           <button className={`icon-btn ${view === 'table' ? 'active' : ''}`} onClick={() => setView('table')} style={{ padding: '8px 16px', borderRadius: '12px', background: view === 'table' ? 'rgba(14, 165, 233, 0.1)' : 'transparent' }}>
-              Raw Records
-           </button>
         </div>
       </div>
 
@@ -81,7 +73,6 @@ const AdminDataset = ({ theme }) => {
         </div>
       ) : (
         <>
-          {view === 'visual' ? (
             <div className="flex-col gap-xl">
               <div className="grid-3 gap-xl">
                 <div className="surface-card p-xl">
@@ -120,8 +111,8 @@ const AdminDataset = ({ theme }) => {
                       <AreaChart data={data}>
                         <defs>
                           <linearGradient id="colorUsage" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
+                            <stop offset="5%" stopColor="#98bf64" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#98bf64" stopOpacity={0}/>
                           </linearGradient>
                           <linearGradient id="colorGen" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#eab308" stopOpacity={0.3}/>
@@ -132,7 +123,7 @@ const AdminDataset = ({ theme }) => {
                         <XAxis dataKey="timestamp" hide />
                         <YAxis stroke={theme === 'dark' ? '#8c9baf' : '#64748b'} fontSize={12} axisLine={false} tickLine={false} />
                         <Tooltip contentStyle={{ background: theme === 'dark' ? '#122136' : '#ffffff', border: 'none', borderRadius: '12px', color: theme === 'dark' ? '#fff' : '#000' }} />
-                        <Area type="monotone" dataKey="usage_kw" stroke="#0ea5e9" fillOpacity={1} fill="url(#colorUsage)" name="Usage (kW)" />
+                        <Area type="monotone" dataKey="usage_kw" stroke="#98bf64" fillOpacity={1} fill="url(#colorUsage)" name="Usage (kW)" />
                         <Area type="monotone" dataKey="generation_kw" stroke="#eab308" fillOpacity={1} fill="url(#colorGen)" name="Generation (kW)" />
                       </AreaChart>
                     </ResponsiveContainer>
@@ -143,54 +134,18 @@ const AdminDataset = ({ theme }) => {
                   <h3>Renewable Energy Contribution %</h3>
                   <div style={{ height: '300px', marginTop: '20px' }}>
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={data}>
+                      <BarChart data={data} theme={theme}>
                         <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#2a3b4f' : '#e2e8f0'} vertical={false} />
                         <XAxis dataKey="timestamp" hide />
                         <YAxis stroke={theme === 'dark' ? '#8c9baf' : '#64748b'} fontSize={12} axisLine={false} tickLine={false} />
                         <Tooltip contentStyle={{ background: theme === 'dark' ? '#122136' : '#ffffff', border: 'none', borderRadius: '12px', color: theme === 'dark' ? '#fff' : '#000' }} />
-                        <Bar dataKey="renewable_contribution" fill="#00D084" radius={[4, 4, 0, 0]} name="Renewable %" />
+                        <Bar dataKey="renewable_contribution" fill="#B5C99A" radius={[4, 4, 0, 0]} name="Renewable %" />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="surface-card p-0 overflow-hidden">
-               <div className="p-xl flex justify-between items-center border-bottom">
-                 <h3 className="m-0">Dataset Record Set</h3>
-                 <button className="icon-btn flex items-center gap-sm">
-                   <Download size={18} /> Export CSV
-                 </button>
-               </div>
-               <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
-                 <table className="admin-table">
-                   <thead>
-                     <tr>
-                       <th>Timestamp</th>
-                       <th>Usage (kW)</th>
-                       <th>Generation (kW)</th>
-                       <th>Battery (%)</th>
-                       <th>Carbon (g/kWh)</th>
-                       <th>Renewable (%)</th>
-                     </tr>
-                   </thead>
-                   <tbody>
-                     {data.map((row, idx) => (
-                       <tr key={idx}>
-                         <td className="font-bold">{new Date(row.timestamp).toLocaleString()}</td>
-                         <td className="text-blue">{row.usage_kw?.toFixed(2)}</td>
-                         <td className="text-yellow">{row.generation_kw?.toFixed(2)}</td>
-                         <td className="text-green font-bold">{row.battery_level?.toFixed(1)}%</td>
-                         <td>{row.carbon_emissions?.toFixed(1)}</td>
-                         <td>{row.renewable_contribution?.toFixed(1)}%</td>
-                       </tr>
-                     ))}
-                   </tbody>
-                 </table>
-               </div>
-            </div>
-          )}
         </>
       )}
     </div>

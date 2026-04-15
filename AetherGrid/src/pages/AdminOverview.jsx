@@ -1,8 +1,35 @@
 import React from 'react';
 import { Activity, Users, MapPin, AlertCircle, TrendingUp, Zap, BarChart2 } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import './Admin.css'; // Shared CSS for admin components to manage global admin animations
 
-const AdminOverview = () => {
+const AdminOverview = ({ theme }) => {
+  const data = [
+    { hour: 0, demand: 150, supply: 160 },
+    { hour: 1, demand: 145, supply: 158 },
+    { hour: 2, demand: 142, supply: 157 },
+    { hour: 3, demand: 140, supply: 156 },
+    { hour: 4, demand: 138, supply: 155 },
+    { hour: 5, demand: 135, supply: 153 },
+    { hour: 6, demand: 132, supply: 152 },
+    { hour: 7, demand: 130, supply: 150 },
+    { hour: 8, demand: 128, supply: 148 },
+    { hour: 9, demand: 125, supply: 147 },
+    { hour: 10, demand: 120, supply: 145 },
+    { hour: 11, demand: 115, supply: 143 },
+    { hour: 12, demand: 112, supply: 140 },
+    { hour: 13, demand: 110, supply: 142 },
+    { hour: 14, demand: 112, supply: 145 },
+    { hour: 15, demand: 115, supply: 148 },
+    { hour: 16, demand: 120, supply: 150 },
+    { hour: 17, demand: 125, supply: 152 },
+    { hour: 18, demand: 130, supply: 155 },
+    { hour: 19, demand: 135, supply: 158 },
+    { hour: 20, demand: 140, supply: 160 },
+    { hour: 21, demand: 145, supply: 162 },
+    { hour: 22, demand: 150, supply: 165 },
+    { hour: 23, demand: 155, supply: 168 },
+  ];
   return (
     <div className="admin-tab-container fade-slide-up">
       <div className="tab-header mb-xl">
@@ -67,16 +94,46 @@ const AdminOverview = () => {
            <div className="flex justify-between items-center mb-lg">
              <h3 className="m-0 flex items-center gap-sm"><BarChart2 size={20} className="text-blue" /> Demand vs Supply (24H)</h3>
            </div>
-           <div className="admin-mock-chart relative" style={{ height: '300px' }}>
-              <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
-                {/* Supply line */ }
-                <path d="M0,10 C20,8 30,5 50,15 C70,25 80,10 100,5" fill="none" stroke="var(--accent-yellow)" strokeWidth="1.5" className="draw-path" />
-                {/* Demand line */ }
-                <path d="M0,20 C10,25 30,22 50,30 C70,35 90,20 100,15" fill="none" stroke="var(--accent-blue)" strokeWidth="1.5" strokeDasharray="2" className="draw-path-delay" />
-              </svg>
-              <div className="absolute bottom-0 left-0 w-full flex justify-between text-xs text-muted">
-                <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span>
-              </div>
+           <div style={{ height: '350px', width: '100%' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#2a3b4f' : '#e2e8f0'} vertical={false} />
+                  <XAxis 
+                    dataKey="hour" 
+                    stroke={theme === 'dark' ? '#8c9baf' : '#64748b'} 
+                    fontSize={12} 
+                    tickFormatter={(val) => `${val}:00`}
+                  />
+                  <YAxis stroke={theme === 'dark' ? '#8c9baf' : '#64748b'} fontSize={12} axisLine={false} tickLine={false} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: theme === 'dark' ? '#122136' : '#ffffff', 
+                      border: 'none', 
+                      borderRadius: '8px', 
+                      color: theme === 'dark' ? '#fff' : '#000',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                    }} 
+                  />
+                  <Legend verticalAlign="top" height={36} />
+                  <Line 
+                    type="monotone" 
+                    dataKey="demand" 
+                    stroke="#98bf64" 
+                    strokeWidth={3} 
+                    dot={false} 
+                    name="Demand (MW)"
+                    activeDot={{ r: 8 }} 
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="supply" 
+                    stroke="#eab308" 
+                    strokeWidth={3} 
+                    dot={false}
+                    name="Supply (MW)"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
            </div>
         </div>
 
