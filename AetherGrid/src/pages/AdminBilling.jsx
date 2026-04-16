@@ -48,119 +48,133 @@ const AdminBilling = ({ theme }) => {
       </div>
 
       <div className="flex-1 overflow-y-auto flex items-center justify-center p-2xl">
-        {/* PHYSICAL BILL REPLICA - FORCED WHITE THEME FOR REALISM */}
-        <div 
-          className="w-[580px] rounded-sm overflow-hidden flex flex-col relative font-mono shadow-[0_40px_100px_rgba(0,0,0,0.6)]"
-          style={{ 
-            border: '8px solid #BAB86C', 
-            background: '#ffffff', 
-            color: '#000000',
-            padding: '40px'
+        {/* PORTRAIT BILL - LIGHT GREY PAPER STYLE */}
+        <div
+          style={{
+            width: '520px',
+            background: '#e6e5dc',
+            border: '3px solid #7a8a3c',
+            padding: '32px 36px',
+            color: '#1a1a1a',
+            fontFamily: "'Courier New', Courier, monospace",
+            fontSize: '13px',
+            lineHeight: '1.7',
+            boxShadow: '0 30px 80px rgba(0,0,0,0.5)',
           }}
         >
-          {/* Header Section */}
-          <div className="flex justify-between items-start border-b-2 border-black pb-4 mb-8">
-             <div className="flex flex-col gap-1">
-                <span className="font-bold text-[10px] uppercase tracking-tight opacity-60">AetherGrid Power Intelligence</span>
-                <span className="text-2xl font-black tracking-tighter">TAX INVOICE [RES]</span>
-                <div className="mt-4">
-                   <span className="text-[10px] font-bold uppercase opacity-50 block">Customer ID</span>
-                   <span className="text-lg font-bold">{billData.consumerId}</span>
-                </div>
-                <span className="text-[10px] uppercase font-bold text-gray-700">{billData.consumerName}</span>
-             </div>
-             <div className="text-right flex flex-col gap-1">
-                <span className="font-bold text-[10px] uppercase opacity-60">Residential Sector</span>
-                <div className="mt-4">
-                   <span className="text-[10px] font-bold uppercase opacity-50 block">Transaction ID</span>
-                   <span className="text-base font-bold">{billData.transactionId}</span>
-                </div>
-                <span className="text-[11px] font-bold text-gray-900 mt-2">DATED: 16-APR-2026</span>
-             </div>
+          {/* HEADER */}
+          <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+            <div style={{ fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.5px' }}>
+              AetherGrid Power Intelligence
+            </div>
+            <div style={{ fontSize: '13px' }}>TAX INVOICE [RES]</div>
           </div>
 
-          {/* Meter Readings Table */}
-          <div className="flex flex-col gap-4 mb-10">
-             <div className="grid grid-cols-3 text-[10px] font-black border-b border-black pb-2 opacity-70">
-                <span>METER DESCRIPTION</span>
-                <span className="text-center">READING DATE</span>
-                <span className="text-right">UNITS (KWH)</span>
-             </div>
-             <div className="grid grid-cols-3 items-center text-xs py-1">
-                <span className="uppercase font-bold">PREVIOUS READING</span>
-                <span className="text-center">{billData.period.previous}</span>
-                <span className="text-right font-bold">{billData.reading.previous}</span>
-             </div>
-             <div className="grid grid-cols-3 items-center text-xs py-1">
-                <span className="uppercase font-bold">CURRENT READING</span>
-                <span className="text-center">{billData.period.present}</span>
-                <span className="text-right font-bold">{billData.reading.present}</span>
-             </div>
-             <div className="grid grid-cols-3 items-center border-y-2 border-black py-4 mt-2 font-black bg-gray-50">
-                <span className="uppercase text-sm">TOTAL CONSUMPTION</span>
-                <span></span>
-                <span className="text-right text-xl">{billData.reading.totalUnits} UNITS</span>
-             </div>
-             <div className="flex justify-between items-center text-[10px] italic px-2 font-bold text-gray-500">
-                <span className="uppercase tracking-tighter">MAXIMUM GRID DEMAND RECORDED</span>
-                <span className="font-mono">{billData.reading.maxDemand.toFixed(2)} KVA</span>
-             </div>
+          <hr style={{ border: 'none', borderTop: '1px solid #7a8a3c', margin: '12px 0' }} />
+
+          {/* CUSTOMER / TRANSACTION INFO */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+            <span>Customer IDRES-4421</span>
+            <span style={{ textAlign: 'right' }}>Residential Sector</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+            <span>{billData.consumerName}</span>
+            <span style={{ textAlign: 'right' }}>Transaction IDTXN-00991823</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <span>DATED: 16-APR-2026</span>
           </div>
 
-          {/* Billing Summary Section */}
-          <div className="flex flex-col gap-4 mb-2">
-             <h3 className="m-0 font-black text-center text-sm uppercase tracking-[0.3em] border-b-2 border-black pb-3">BILLING SUMMARY</h3>
-             <div className="flex flex-col gap-3">
-                <div className="grid grid-cols-3 text-[10px] font-bold opacity-40 border-b border-black/10 pb-2">
-                   <span>DUE DATE</span>
-                   <span className="text-center">WITH REBATE</span>
-                   <span className="text-right">FULL AMOUNT</span>
-                </div>
-                {billData.payable.map((p, idx) => (
-                   <div key={idx} className="grid grid-cols-3 items-center py-2">
-                      <span className="font-bold text-sm tracking-tighter">{p.dueDate}</span>
-                      <span className="text-center font-black text-xl">₹ {p.amountBefore.toFixed(2)}</span>
-                      <span className="text-right text-gray-500 font-bold">₹ {p.amountAfter.toFixed(2)}</span>
-                   </div>
-                ))}
-             </div>
+          <hr style={{ border: 'none', borderTop: '1px solid #7a8a3c', margin: '12px 0' }} />
+
+          {/* METER DETAILS */}
+          <div style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>
+            Meter Details
+          </div>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "'Courier New', Courier, monospace", fontSize: '13px' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid #aaa' }}>
+                <th style={{ textAlign: 'left', fontWeight: 'bold', padding: '2px 0' }}>METER DESCRIPTION</th>
+                <th style={{ textAlign: 'center', fontWeight: 'bold', padding: '2px 0' }}>READING DATE</th>
+                <th style={{ textAlign: 'right', fontWeight: 'bold', padding: '2px 0' }}>UNITS (KWH)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style={{ padding: '2px 0' }}>PREVIOUS READING</td>
+                <td style={{ textAlign: 'center', padding: '2px 0' }}>{billData.period.previous}</td>
+                <td style={{ textAlign: 'right', padding: '2px 0' }}>{billData.reading.previous}</td>
+              </tr>
+              <tr>
+                <td style={{ padding: '2px 0' }}>CURRENT READING</td>
+                <td style={{ textAlign: 'center', padding: '2px 0' }}>{billData.period.present}</td>
+                <td style={{ textAlign: 'right', padding: '2px 0' }}>{billData.reading.present}</td>
+              </tr>
+              <tr>
+                <td style={{ padding: '2px 0' }}>TOTAL CONSUMPTION</td>
+                <td></td>
+                <td style={{ textAlign: 'right', padding: '2px 0' }}>{billData.reading.totalUnits} UNITS</td>
+              </tr>
+              <tr>
+                <td style={{ padding: '2px 0' }}>MAXIMUM GRID DEMAND RECORDED</td>
+                <td></td>
+                <td style={{ textAlign: 'right', padding: '2px 0' }}>{billData.reading.maxDemand.toFixed(2)} KVA</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr style={{ border: 'none', borderTop: '1px solid #7a8a3c', margin: '12px 0' }} />
+
+          {/* BILLING SUMMARY */}
+          <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '15px', margin: '4px 0 10px 0', letterSpacing: '1px' }}>
+            BILLING SUMMARY
           </div>
 
-          {/* Economic Calculation */}
-          <div className="flex flex-col gap-2 border-t-2 border-black pt-6 mt-4">
-             <div className="flex justify-between items-center text-[11px] px-2 italic font-bold">
-                <span className="uppercase tracking-tight text-gray-600">Solar Grid Feed-in Rebate Applied</span>
-                <span className="font-black text-red-600">- ₹ {billData.rebate.toFixed(2)}</span>
-             </div>
-             <div className="bg-black text-white p-6 mt-4 flex justify-between items-center shadow-2xl skew-x-[-2deg]">
-                <div className="flex flex-col">
-                   <span className="font-bold text-[10px] uppercase tracking-widest opacity-60">NET PAYABLE AMOUNT</span>
-                   <span className="font-bold text-xs uppercase tracking-tighter italic">Valid for electronic settlement</span>
-                </div>
-                <span className="font-bold text-4xl tracking-tighter">₹ {billData.totalPayable.toFixed(2)}</span>
-             </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', padding: '2px 0' }}>
+            <span>DUE DATE WITH REBATE</span>
+            <span>FULL AMOUNT</span>
+          </div>
+          {billData.payable.map((p, idx) => (
+            <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', padding: '2px 0' }}>
+              <span>{p.dueDate}&nbsp;&nbsp;&nbsp;&#8377; {p.amountBefore.toFixed(2)}</span>
+              <span>&#8377; {p.amountAfter.toFixed(2)}</span>
+            </div>
+          ))}
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0 2px 0' }}>
+            <span>Solar Grid Feed-in Rebate Applied</span>
+            <span>- &#8377; {billData.rebate.toFixed(2)}</span>
           </div>
 
-          {/* Footer Logistics */}
-          <div className="mt-12 flex items-end justify-between border-t border-black pt-8 border-dashed">
-             <div className="flex gap-6 items-center">
-                <div className="p-2 bg-white border-2 border-black rotate-3">
-                   <QrCode size={70} className="text-black" />
-                </div>
-                <div className="flex flex-col gap-1">
-                   <span className="text-[10px] font-black uppercase italic tracking-widest underline">AUTHENTICATION HUB</span>
-                   <p className="m-0 text-[10px] font-bold text-gray-600 max-w-[220px] leading-tight">
-                      This is a computer generated artifact and requires no physical signature. Verified by AetherGrid Security Protocol 7.2.
-                   </p>
-                </div>
-             </div>
-             <span className="text-[120px] font-black absolute -bottom-10 -left-6 text-black/[0.04] pointer-events-none -rotate-12 z-0">
-                OFFICIAL
-             </span>
-             <div className="text-right z-10">
-                <span className="text-[10px] font-bold uppercase block opacity-60">Digital Settlement Portal</span>
-                <span className="text-[9px] font-black border border-black px-2 py-1 mt-1 block">SCAN TO SETTLE NOW</span>
-             </div>
+          <hr style={{ border: 'none', borderTop: '1px solid #7a8a3c', margin: '10px 0' }} />
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', padding: '2px 0' }}>
+            <span>NET PAYABLE AMOUNT</span>
+            <span>&#8377; {billData.totalPayable.toFixed(2)}</span>
+          </div>
+          <div style={{ fontSize: '11px', marginTop: '4px' }}>Valid for electronic settlement</div>
+
+          <hr style={{ border: 'none', borderTop: '1px solid #7a8a3c', margin: '12px 0' }} />
+
+          {/* FOOTER */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+              {/* Simple HTML block simulated QR code */}
+              <div style={{ fontSize: '36px', lineHeight: '1', letterSpacing: '-2px', fontFamily: 'monospace' }}>
+                &#9647;&#9646;<br/>&#9646;&#9647;<br/>&#9647;&#9646;
+              </div>
+              <div style={{ fontSize: '12px', lineHeight: '1.6' }}>
+                <strong>AUTHENTICATION HUB</strong>
+              </div>
+            </div>
+            <div style={{ textAlign: 'right', fontSize: '12px', lineHeight: '1.7' }}>
+              <div>OFFICIAL Digital Settlement Portal</div>
+              <div><strong>SCAN TO SETTLE NOW</strong></div>
+            </div>
+          </div>
+
+          <div style={{ fontSize: '10.5px', marginTop: '10px', lineHeight: '1.6', color: '#333' }}>
+            This is a computer generated artifact and requires no physical signature. Verified by AetherGrid Security Protocol 7.2.
           </div>
         </div>
       </div>

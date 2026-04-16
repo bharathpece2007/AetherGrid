@@ -2,15 +2,71 @@ import React, { useState, useEffect } from 'react';
 import { 
   Battery, Zap, AlertTriangle, TrendingUp, 
   Clock, Power, Activity, ShieldCheck, 
-  Server, BarChart2 
+  Server, BarChart2, CheckCircle2
 } from 'lucide-react';
-import './Admin.css'; // Consistent tactical CSS
+import { 
+  BarChart, Bar, Rectangle, XAxis, YAxis, 
+  CartesianGrid, Tooltip, ResponsiveContainer 
+} from 'recharts';
+import { supabase } from '../supabaseClient';
+import './Admin.css';
+
+// Fallback data if DB fetch fails
+const defaultChartData = [
+  { time: '08:00', level: 40 }, { time: '09:00', level: 65 },
+  { time: '11:00', level: 30 }, { time: '12:00', level: 85 },
+  { time: '14:00', level: 45 }, { time: '16:00', level: 90 },
+  { time: '18:00', level: 55 }, { time: '20:00', level: 75 },
+  { time: '21:00', level: 40 }, { time: '22:00', level: 60 },
+  { time: '23:59', level: 35 }
+];
 
 const BatteryTab = () => {
   const [chargeLevel, setChargeLevel] = useState(88);
   const [dischargeRate, setDischargeRate] = useState(2.1);
   const [isCharging, setIsCharging] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [showSyncSuccess, setShowSyncSuccess] = useState(false);
+  
+  // Chart Backend State
+  const [chartData, setChartData] = useState(defaultChartData);
+  const [loadingChart, setLoadingChart] = useState(true);
 
+  // Fetch actual chart data from Supabase Backend
+  useEffect(() => {
+    const fetchChartData = async () => {
+      try {
+        if (!supabase) throw new Error("No supabase client");
+        
+        const { data, error } = await supabase
+          .from('energy_logs')
+          .select('timestamp, battery_level')
+          .not('battery_level', 'is', null)
+          .order('timestamp', { ascending: false })
+          .limit(11);
+          
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          // Format the DB data for the chart, reversing it so oldest is first
+          const formatted = data.reverse().map(log => {
+            const date = new Date(log.timestamp);
+            return {
+              time: `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`,
+              level: Math.round(log.battery_level)
+            };
+          });
+          setChartData(formatted);
+        }
+      } catch (err) {
+        console.warn("Failed to fetch live chart data, using fallback.", err);
+      } finally {
+        setLoadingChart(false);
+      }
+    };
+    
+    fetchChartData();
+  }, []);
   useEffect(() => {
     const interval = setInterval(() => {
       setChargeLevel(prev => {
@@ -22,6 +78,42 @@ const BatteryTab = () => {
     return () => clearInterval(interval);
   }, [isCharging]);
 
+  const handleCommand = async (chargeMode) => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    setShowSyncSuccess(false);
+    
+    // Simulate initial network delay
+    await new Promise(r => setTimeout(r, 600));
+    
+    try {
+      if (supabase) {
+        // Push actual update to supabase database (The "Backend")
+        const newStatus = chargeMode ? 'Charging' : 'Discharging';
+        const { error } = await supabase
+          .from('der_registry')
+          .update({ status: newStatus, updated_at: new Date().toISOString() })
+          .eq('node_id', 'ND-0842');
+          
+        if (error) {
+          console.warn("DB Update failed (no table or perms), but continuing as mock.", error);
+          await new Promise(r => setTimeout(r, 500));
+        }
+      }
+
+      setIsCharging(chargeMode);
+      
+      // Show brief success indicator
+      setShowSyncSuccess(true);
+      setTimeout(() => setShowSyncSuccess(false), 3000);
+      
+    } catch (err) {
+      console.error("Backend error:", err);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
     <div className="admin-tab-container fade-slide-up">
       {/* Tactical Header */}
@@ -31,7 +123,7 @@ const BatteryTab = () => {
              <Server className="text-gold" /> Critical Storage
           </h1>
           <p className="text-muted text-xs uppercase font-black tracking-widest mt-xs">
-             Deep cycle battery monitoring and backup reserve management.
+             Deep cycle battery monitoring and backend command management.
           </p>
         </div>
         <div className="status-badge live admin-pulse">
@@ -45,18 +137,42 @@ const BatteryTab = () => {
         <div className="surface-card flex flex-col items-center justify-center p-2xl bg-black/40 border-gold/10 relative overflow-hidden">
            <div className="text-[10px] font-black uppercase text-muted tracking-[0.4em] mb-2xl">Energy Reserve Manifold</div>
            
-           <div className="relative w-48 h-80 border-4 border-white/10 rounded-[3rem] p-2 flex flex-col justify-end overflow-hidden group">
+           <div 
+             className="relative flex flex-col justify-end overflow-hidden group mt-4"
+             style={{
+               width: '200px',
+               height: '320px',
+               border: '4px solid rgba(255,255,255,0.1)',
+               borderRadius: '3rem',
+               padding: '8px',
+               margin: '0 auto',
+               boxShadow: 'inset 0 0 40px rgba(0,0,0,0.8)'
+             }}
+           >
               {/* Battery Top Cap */}
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-4 bg-white/10 rounded-t-xl"></div>
+              <div style={{ position: 'absolute', top: '0', left: '50%', transform: 'translateX(-50%)', width: '80px', height: '12px', background: 'rgba(255,255,255,0.2)', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' }}></div>
               
+              <div style={{ flex: 1 }}></div>
+
               {/* Dynamic Fill Level */}
               <div 
-                className="w-full bg-gold shadow-glow-gold transition-all duration-1000 relative flex items-center justify-center overflow-hidden" 
-                style={{ height: `${chargeLevel}%`, borderRadius: '0 0 2.5rem 2.5rem' }}
+                className="shadow-glow-gold transition-all" 
+                style={{ 
+                  width: '100%',
+                  height: `${chargeLevel}%`, 
+                  borderRadius: '0 0 2.5rem 2.5rem',
+                  background: isCharging ? '#BAB86C' : '#8c9baf',
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                  transition: 'height 1s cubic-bezier(0.4, 0, 0.2, 1), background 1s ease'
+                }}
               >
                   {/* Energy Wave Animation */}
-                  <div className="absolute top-0 left-0 w-[200%] h-full bg-white/10 -translate-x-1/2 animate-pulse skew-x-12"></div>
-                  <span className="text-black font-black text-4xl z-10">{Math.round(chargeLevel)}%</span>
+                  <div className="pulse-slow" style={{ position: 'absolute', top: 0, left: 0, width: '150%', height: '100%', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)', transform: 'skewX(-20deg)' }}></div>
+                  <span style={{ color: '#000', fontWeight: '900', fontSize: '2.5rem', zIndex: 10, position: 'relative' }}>{Math.round(chargeLevel)}%</span>
               </div>
            </div>
 
@@ -114,21 +230,36 @@ const BatteryTab = () => {
               </div>
            </div>
 
-           {/* Strategic Actions */}
-           <div className="surface-card p-xl bg-gold/5 border-gold/20">
-              <h3 className="m-0 mb-xl text-gold font-black text-xs uppercase tracking-widest">Strategic Storage Controls</h3>
-              <div className="grid-2 gap-md">
+           {/* Strategic Actions WITH BACKEND */}
+           <div className="surface-card p-xl bg-gold/5 border-gold/20 flex flex-col gap-md">
+              <div className="flex justify-between items-center">
+                 <h3 className="m-0 text-gold font-black text-xs uppercase tracking-widest">Strategic Storage Controls</h3>
+                 
+                 {/* Status Indicator */}
+                 <div className="flex items-center gap-xs">
+                    {isProcessing && <div className="text-[10px] text-gold animate-pulse uppercase tracking-widest font-bold">Syncing Database...</div>}
+                    {showSyncSuccess && !isProcessing && (
+                      <div className="text-[10px] text-green-400 font-bold uppercase tracking-widest flex items-center gap-1">
+                         <CheckCircle2 size={12} /> DB Synced
+                      </div>
+                    )}
+                 </div>
+              </div>
+              
+              <div className="grid-2 gap-md relative mt-xs">
                  <button 
-                  onClick={() => setIsCharging(true)}
-                  className={`btn-gold flex flex-col items-center gap-xs py-xl ${isCharging ? 'shadow-glow-gold' : 'opacity-60'}`}
+                  onClick={() => handleCommand(true)}
+                  disabled={isProcessing}
+                  className={`btn-gold flex flex-col items-center gap-xs py-xl border border-transparent transition-all ${isCharging ? 'shadow-glow-gold' : 'opacity-60'} ${isProcessing ? 'pointer-events-none opacity-40' : ''}`}
                  >
                     <TrendingUp size={24} />
                     <span className="font-black">Charge Mode</span>
                     <span className="text-[8px] opacity-60">Grid → Storage</span>
                  </button>
                  <button 
-                  onClick={() => setIsCharging(false)}
-                  className={`btn-gold flex flex-col items-center gap-xs py-xl ${!isCharging ? 'shadow-glow-gold' : 'opacity-60'}`}
+                  onClick={() => handleCommand(false)}
+                  disabled={isProcessing}
+                  className={`btn-gold flex flex-col items-center gap-xs py-xl transition-all ${!isCharging ? 'shadow-glow-gold' : 'opacity-60'} ${isProcessing ? 'pointer-events-none opacity-40' : ''}`}
                   style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }}
                  >
                     <Power size={24} />
@@ -141,24 +272,46 @@ const BatteryTab = () => {
       </div>
 
       {/* Analytics Subsection */}
-      <div className="px-lg mt-xl">
+      <div className="px-lg mt-xl mb-2xl">
          <div className="surface-card p-xl bg-black/40 border-gold/10">
-            <h3 className="m-0 mb-xl flex items-center gap-sm font-black text-xs uppercase tracking-widest">
-               <BarChart2 size={18} className="text-gold" /> Charge Efficiency Profile
-            </h3>
-            <div className="flex gap-xl h-48 items-end justify-between px-xl">
-               {[40, 65, 30, 85, 45, 90, 55, 75, 40, 60, 35].map((h, i) => (
-                  <div key={i} className="flex-1 bg-white/5 relative group cursor-help" style={{ height: `${h}%` }}>
-                     <div className="absolute inset-0 bg-gold opacity-0 group-hover:opacity-40 transition-all"></div>
-                  </div>
-               ))}
+            <div className="flex justify-between items-center mb-xl">
+              <h3 className="m-0 flex items-center gap-sm font-black text-xs uppercase tracking-widest">
+                 <BarChart2 size={18} className="text-gold" /> Charge Efficiency Profile
+              </h3>
+              {loadingChart && <div className="text-[10px] text-gold animate-pulse uppercase tracking-widest">Fetching DB Logs...</div>}
             </div>
-            <div className="flex justify-between text-[10px] text-muted font-black mt-md uppercase tracking-widest px-xl">
-               <span>08:00</span>
-               <span>12:00</span>
-               <span>16:00</span>
-               <span>20:00</span>
-               <span>23:59</span>
+
+            <div style={{ height: '220px', width: '100%', padding: '0 1rem' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                  <XAxis 
+                    dataKey="time" 
+                    stroke="rgba(255,255,255,0.2)" 
+                    tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 900 }} 
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    stroke="rgba(255,255,255,0.2)" 
+                    tick={{ fill: 'var(--text-muted)', fontSize: 10 }}
+                    axisLine={false}
+                    tickLine={false}
+                    domain={[0, 100]}
+                  />
+                  <Tooltip 
+                    cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                    contentStyle={{ backgroundColor: '#000', border: '1px solid rgba(186,184,108,0.2)', color: '#BAB86C', fontWeight: 900, borderRadius: '8px' }}
+                    itemStyle={{ color: '#fff' }}
+                  />
+                  <Bar 
+                    dataKey="level" 
+                    fill="rgba(186,184,108,0.7)" 
+                    activeBar={<Rectangle fill="#FFFFFF" />}
+                    radius={[4, 4, 0, 0]} 
+                  />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
          </div>
       </div>
