@@ -14,9 +14,8 @@ import AdminDERManagement from '../pages/AdminDERManagement';
 import WeatherCenter from '../pages/WeatherCenter';
 import AdminForecastAI from '../pages/AdminForecastAI';
 import AdminEnergyDistribution from '../pages/AdminEnergyDistribution';
-import AdminResilience from '../pages/AdminResilience';
 import AdminDataset from '../pages/AdminDataset';
-import AdminBilling from '../pages/AdminBilling';
+import Settings from '../pages/Settings';
 import AIChatBot from '../components/AIChatBot';
 
 import { 
@@ -35,6 +34,28 @@ const DashboardLayout = () => {
   const [activeTab, setActiveTab] = useState(role === 'admin' ? 'grid-overview' : 'overview');
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
   const [weather, setWeather] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const [userProfile, setUserProfile] = useState({
+    name: localStorage.getItem('userName') || 'Demo User',
+    email: localStorage.getItem('userEmail') || 'user@aethergrid.io'
+  });
+
+  // Sync profile from storage
+  useEffect(() => {
+    const syncProfile = () => {
+      setUserProfile({
+        name: localStorage.getItem('userName') || 'Demo User',
+        email: localStorage.getItem('userEmail') || 'user@aethergrid.io'
+      });
+    };
+    window.addEventListener('storage', syncProfile);
+    // Poll for changes in the same tab as well
+    const interval = setInterval(syncProfile, 2000);
+    return () => {
+      window.removeEventListener('storage', syncProfile);
+      clearInterval(interval);
+    };
+  }, []);
 
   const adminTabs = [
     { id: 'grid-overview', label: 'System Overview', icon: Grid },
@@ -43,9 +64,7 @@ const DashboardLayout = () => {
     { id: 'der-management', label: 'Assets & Solar Management', icon: Server },
     { id: 'weather-center', label: 'Weather Intelligence', icon: ThermometerSun },
     { id: 'forecast-ai', label: 'Forecasting and Intelligence', icon: TrendingUp },
-    { id: 'resilience', label: 'Resilience and Recovery', icon: ShieldAlert },
     { id: 'dataset', label: 'Data and Analytics', icon: Database },
-    { id: 'billing', label: 'Finance & Billing', icon: CreditCard },
   ];
 
   const userTabs = [
@@ -53,7 +72,6 @@ const DashboardLayout = () => {
     { id: 'energy-sharing', label: 'P2P Exchange', icon: Network },
     { id: 'battery', label: 'Critical Storage', icon: Server },
     { id: 'weather-alerts', label: 'Weather Intel', icon: ThermometerSun },
-    { id: 'billing', label: 'Finance & Billing', icon: CreditCard },
   ];
 
   const tabs = role === 'admin' ? adminTabs : userTabs;
@@ -106,9 +124,8 @@ const DashboardLayout = () => {
     if (activeTab === 'der-management') return <AdminDERManagement theme={theme} setActiveTab={setActiveTab} />;
     if (activeTab === 'weather-center') return <WeatherCenter theme={theme} setActiveTab={setActiveTab} />;
     if (activeTab === 'forecast-ai') return <AdminForecastAI theme={theme} setActiveTab={setActiveTab} />;
-    if (activeTab === 'resilience') return <AdminResilience theme={theme} setActiveTab={setActiveTab} />;
     if (activeTab === 'dataset') return <AdminDataset theme={theme} setActiveTab={setActiveTab} />;
-    if (activeTab === 'billing') return <AdminBilling theme={theme} setActiveTab={setActiveTab} />;
+    if (activeTab === 'settings') return <Settings theme={theme} />;
 
     // Fallback
     return null;
@@ -136,10 +153,53 @@ const DashboardLayout = () => {
                 <span className="text-white font-bold">{weather ? `${Math.round(weather.main.temp)}°C` : '--°C'}</span>
               </div>
 
-              <div className="command-actions-pinned flex gap-md">
+              <div className="command-actions-pinned flex gap-md relative">
                 <button className="icon-utility-btn theme-toggle" onClick={toggleTheme} title="Toggle Atmosphere">
                   {theme === 'dark' ? <Sun size={18} className="text-white" /> : <Moon size={18} className="text-white" />}
                 </button>
+
+                {/* Profile Portal beside theme toggle */}
+                <div className="profile-portal-wrapper relative">
+                   <button 
+                     className={`icon-utility-btn profile-trigger ${showProfile ? 'active' : ''}`}
+                     onClick={() => setShowProfile(!showProfile)}
+                     title="Access Profile Intelligence"
+                   >
+                     <User size={18} className={showProfile ? 'text-gold' : 'text-white'} />
+                   </button>
+
+                   {showProfile && (
+                     <div className="profile-dropdown surface-card fade-slide-up border-gold-tactical">
+                        <div className="p-xl border-b border-white/10 flex flex-col gap-1 relative">
+                           <button 
+                             className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors"
+                             onClick={() => setShowProfile(false)}
+                             title="Dismiss Portal"
+                           >
+                              <div className="text-[10px] font-black uppercase tracking-widest flex items-center gap-1">
+                                 <LogOut size={12} className="rotate-180" /> Back
+                              </div>
+                           </button>
+                           <span className="text-[10px] font-black text-gold uppercase tracking-[0.2em]">Operational Pulse</span>
+                           <h4 className="m-0 text-white font-black text-sm uppercase">{userProfile.name}</h4>
+                           <span className="text-[10px] text-white/50 font-bold">{userProfile.email}</span>
+                        </div>
+                        <div className="p-md flex flex-col gap-xs">
+                           <button 
+                             className="dropdown-link-btn"
+                             onClick={() => { setActiveTab('settings'); setShowProfile(false); }}
+                           >
+                              <div className="link-icon-bg"><User size={14} /></div>
+                              <span>View Credentials</span>
+                           </button>
+                           <button className="dropdown-link-btn logout" onClick={handleLogout}>
+                              <div className="link-icon-bg"><LogOut size={14} /></div>
+                              <span>Terminate Node Access</span>
+                           </button>
+                        </div>
+                     </div>
+                   )}
+                </div>
 
                 <button className="icon-utility-btn logout-btn-pinned" onClick={handleLogout} title="Terminate Session">
                   <LogOut size={18} className="text-white" />

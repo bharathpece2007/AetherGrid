@@ -78,15 +78,16 @@ const AdminLiveMonitoring = ({ theme }) => {
     { time: "22:00", hz: 49.89, status: "Normal" },
     { time: "23:00", hz: 49.92, status: "Normal" },
   ];
-  // Define 6 static nodes covering Mysuru
+
+  // Define static nodes covering Mysuru
   const [nodes, setNodes] = useState([
-    { id: 'ND-PALACE', name: 'Palace Central Grid', pos: [12.3051, 76.6551], gen: 4.2, load: 3.8, status: 'Sync', type: 'stable', color: '#BAB86C' },
-    { id: 'ND-HOOTA', name: 'Hootagalli Ind.', pos: [12.3250, 76.5950], gen: 1.2, load: 8.5, status: 'Spike', type: 'danger', color: '#EF4444' },
-    { id: 'ND-HEBBAL', name: 'Hebbal Substation', pos: [12.3550, 76.6350], gen: 6.8, load: 4.1, status: 'Sync', type: 'stable', color: '#BAB86C' },
-    { id: 'ND-CHAMU', name: 'Chamundi Hills', pos: [12.2750, 76.6710], gen: 2.5, load: 1.2, status: 'Sync', type: 'stable', color: '#BAB86C' },
-    { id: 'ND-SIDDA', name: 'Siddhartha Layout', pos: [12.3080, 76.6850], gen: 3.1, load: 2.9, status: 'Sync', type: 'stable', color: '#BAB86C' },
-    { id: 'ND-KRS', name: 'KRS Road Sector', pos: [12.3450, 76.6150], gen: 5.5, load: 2.2, status: 'Sync', type: 'stable', color: '#EAB308' },
-    { id: 'ND-JAYA', name: 'Jayalakshmipuram Zone', pos: [12.3210, 76.6340], gen: 1.8, load: 7.2, status: 'Warning', type: 'warning', color: '#BAB86C' },
+    { id: 'ND-PALACE', name: 'Palace Central Grid', pos: [12.3051, 76.6551], gen: 4.0, load: 4.4, status: 'Sync', type: 'stable', color: '#22c55e' },
+    { id: 'ND-HOOTA', name: 'Hootagalli Ind.', pos: [12.3250, 76.5950], gen: 1.5, load: 8.8, status: 'Spike', type: 'danger', color: '#ef4444' },
+    { id: 'ND-HEBBAL', name: 'Hebbal Substation', pos: [12.3550, 76.6350], gen: 6.9, load: 4.0, status: 'Sync', type: 'stable', color: '#22c55e' },
+    { id: 'ND-CHAMU', name: 'Chamundi Hills', pos: [12.2750, 76.6710], gen: 2.4, load: 1.4, status: 'Sync', type: 'stable', color: '#22c55e' },
+    { id: 'ND-SIDDA', name: 'Siddhartha Layout', pos: [12.3080, 76.6850], gen: 3.1, load: 2.7, status: 'Sync', type: 'stable', color: '#22c55e' },
+    { id: 'ND-KRS', name: 'KRS Road Sector', pos: [12.3450, 76.6150], gen: 5.4, load: 2.2, status: 'Sync', type: 'stable', color: '#22c55e' },
+    { id: 'ND-JAYA', name: 'Jayalakshmipuram Zone', pos: [12.3210, 76.6340], gen: 1.8, load: 7.4, status: 'Spike', type: 'danger', color: '#ef4444' },
   ]);
 
   const [stream, setStream] = useState([]);
@@ -101,37 +102,27 @@ const AdminLiveMonitoring = ({ theme }) => {
           // Subtle fluctuation for all nodes
           const loadChange = (Math.random() - 0.5) * 0.4;
           const newLoad = Math.max(0.2, n.load + loadChange);
-          const isSpike = newLoad > 7.5;
+          const isSpike = newLoad > 7.0;
           
           return {
             ...n,
             load: parseFloat(newLoad.toFixed(1)),
-            status: isSpike ? 'Spike' : (newLoad > 5.5 ? 'Warning' : 'Sync'),
-            type: isSpike ? 'danger' : (newLoad > 5.5 ? 'warning' : 'stable'),
-            color: isSpike ? '#EF4444' : (newLoad > 5.5 ? '#EAB308' : '#BAB86C')
+            status: isSpike ? 'Spike' : 'Sync',
+            type: isSpike ? 'danger' : 'stable',
+            color: isSpike ? '#ef4444' : '#22c55e'
           };
         });
 
-        // Push top changes to stream
+        // Update stream
         setStream(prevStream => {
           const sorted = [...updated].sort((a, b) => b.load - a.load);
-          const top3 = sorted.slice(0, 3).map(s => ({ ...s, time: 'Live' }));
-          const combined = [...top3, ...prevStream];
-          // Unique by ID, keep latest
-          const unique = [];
-          const seen = new Set();
-          for (const item of combined) {
-            if (!seen.has(item.id)) {
-              unique.push(item);
-              seen.add(item.id);
-            }
-          }
-          return unique.slice(0, 10);
+          const active = sorted.slice(0, 10).map(s => ({ ...s, time: 'Live' }));
+          return active;
         });
 
         return updated;
       });
-    }, 2000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);
@@ -140,14 +131,14 @@ const AdminLiveMonitoring = ({ theme }) => {
     <div className="admin-tab-container fade-slide-up">
       <div className="tab-header mb-xl flex flex-col items-center text-center">
         <div className="flex items-center gap-md mb-xs">
-          <Activity className="text-gold" size={32} />
-          <h1 className="m-0 text-3xl font-black tracking-tighter uppercase">Live Grid Monitoring</h1>
-          <div className="header-chip-pinned admin-hz-pill py-1 px-3 bg-black/40 border border-white/10 rounded-full ml-sm">
-             <span className="font-extrabold text-sm text-gold">50.01</span>
-             <span className="text-[10px] text-muted ml-1 font-black uppercase">Hz (Optimal)</span>
+          <Activity className="text-white" size={32} />
+          <h1 className="m-0 text-5xl font-black tracking-tighter uppercase">Live Grid Monitoring</h1>
+          <div className="header-chip-pinned admin-hz-pill py-1 px-4 bg-black/60 border border-white/20 rounded-lg ml-md flex items-center gap-2">
+             <span className="font-black text-xl text-white">50.01</span>
+             <span className="text-[10px] text-muted-main font-black uppercase tracking-widest opacity-70">Hz (Optimal)</span>
           </div>
         </div>
-        <p className="text-muted text-[10px] uppercase tracking-widest font-black">High-precision node tracking across Mysuru Metropolitan Area</p>
+        <p className="text-muted-main text-[12px] uppercase tracking-[0.3em] font-black opacity-60">High-precision node tracking across Mysuru Metropolitan Area</p>
       </div>
 
       <div className="grid-2 gap-xl" style={{ gridTemplateColumns: '1.6fr 1.0fr' }}>
@@ -155,20 +146,21 @@ const AdminLiveMonitoring = ({ theme }) => {
         {/* Left Column: Map + Frequency */}
         <div className="flex flex-col gap-xl">
           {/* Map Area */}
-          <div className="surface-card p-0 flex flex-col relative overflow-hidden" style={{ minHeight: '550px' }}>
+          <div className="surface-card p-0 flex flex-col relative overflow-hidden" style={{ minHeight: '600px' }}>
             <div className="p-xl pb-md border-b border-white/10 flex justify-between items-center z-10 bg-black/40">
-              <h3 className="m-0 flex items-center gap-sm font-black text-xs uppercase tracking-widest"><Map size={20} className="text-gold" /> Geographical Node Distribution</h3>
-              <div className="flex gap-sm text-[10px] font-black uppercase">
-                  <span className="flex items-center gap-xs"><span className="w-2 h-2 rounded-full bg-red"></span> Critical</span>
-                  <span className="flex items-center gap-xs ml-md"><span className="w-2 h-2 rounded-full bg-gold"></span> Optimal</span>
+              <h3 className="m-0 flex items-center gap-sm font-black text-sm uppercase tracking-widest"><Map size={20} className="text-white" /> Geographical Node Distribution</h3>
+              <div className="flex gap-lg text-[10px] font-black uppercase tracking-widest">
+                  <span className="flex items-center gap-xs"><span className="w-2 h-2 rounded-full bg-red-500"></span> Critical</span>
+                  <span className="flex items-center gap-xs"><span className="w-2 h-2 rounded-full bg-green-500"></span> Optimal</span>
               </div>
             </div>
             
-            <div className="map-container relative flex-1" style={{ height: '400px', zIndex: 1 }}>
+            <div className="map-container relative flex-1" style={{ height: '450px', zIndex: 1 }}>
               <MapContainer 
                 center={mapState.center} 
                 zoom={mapState.zoom} 
                 scrollWheelZoom={false}
+                zoomControl={true}
                 style={{ height: '100%', width: '100%' }}
               >
                 <TileLayer
@@ -180,42 +172,37 @@ const AdminLiveMonitoring = ({ theme }) => {
                   <CircleMarker 
                     key={i}
                     center={node.pos}
-                    radius={node.type === 'danger' ? 22 : 12}
+                    radius={node.type === 'danger' ? 24 : 14}
                     pathOptions={{ 
                       color: node.color, 
                       fillColor: node.color, 
-                      fillOpacity: 0.6,
+                      fillOpacity: 0.5,
                       weight: 2
                     }}
                     className={node.type === 'danger' ? 'admin-pulse' : ''}
                   >
-                    <LeafletTooltip permanent direction="top" offset={[0, -10]} opacity={0.9} className="tactical-tooltip-small">
-                        <span className="font-black text-[9px] uppercase">{node.id}</span>
+                    <LeafletTooltip permanent direction="top" offset={[0, -15]} opacity={1} className="tactical-tooltip-node">
+                        <span className="font-black text-[10px] uppercase tracking-tighter">{node.name}</span>
                     </LeafletTooltip>
                   </CircleMarker>
                 ))}
               </MapContainer>
-
-              <div className="absolute top-4 left-4 z-20 flex flex-col gap-sm">
-                  <div className="bg-black/80 backdrop-blur-3xl px-md py-xs rounded border border-gold/30 text-[9px] font-black uppercase tracking-widest text-gold shadow-glow-gold">96.2% STABILITY</div>
-                  <div className="bg-black/80 backdrop-blur-3xl px-md py-xs rounded border border-red/30 text-[9px] font-black uppercase tracking-widest text-red">1 NODE STRESSED</div>
-              </div>
             </div>
           </div>
 
-          {/* Frequency Monitoring Area */}
+          {/* Grid Frequency Stability Monitor */}
           <div className="surface-card p-xl">
-            <div className="flex justify-between items-center mb-xl px-lg">
+            <div className="flex justify-between items-center mb-xl">
               <div>
-                <h3 className="m-0 flex items-center gap-sm font-black text-xs uppercase tracking-widest">
-                  <TrendingUp size={20} className="text-gold" /> Grid Frequency Stability
+                <h3 className="m-0 flex items-center gap-sm font-black text-sm uppercase tracking-widest">
+                  <TrendingUp size={20} className="text-white" /> Grid Frequency Stability Monitor
                 </h3>
-                <p className="m-0 text-[10px] text-muted mt-xs font-black uppercase tracking-widest">Pulse mapping (Target: 50.00Hz)</p>
+                <p className="m-0 text-[10px] text-muted-main mt-xs font-black uppercase tracking-widest opacity-60">Real-time Hz pulse mapping (Target: 50.00Hz)</p>
               </div>
               <div className="flex items-center gap-md">
                 <div className="flex items-center gap-xs">
-                   <div className="dot bg-gold animate-pulse"></div>
-                   <span className="text-[10px] font-black uppercase tracking-widest text-gold">Live Scanning</span>
+                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-green-500">Live Scanning</span>
                 </div>
               </div>
             </div>
@@ -225,8 +212,8 @@ const AdminLiveMonitoring = ({ theme }) => {
                 <AreaChart data={frequencyData.slice(-24)}>
                   <defs>
                     <linearGradient id="colorHz" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#BAB86C" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#BAB86C" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
@@ -242,7 +229,7 @@ const AdminLiveMonitoring = ({ theme }) => {
                   <Tooltip 
                     contentStyle={{ 
                       backgroundColor: '#050505', 
-                      border: '1px solid rgba(186,184,108,0.3)', 
+                      border: '1px solid rgba(255,255,255,0.1)', 
                       borderRadius: '8px',
                       fontSize: '10px',
                       color: '#fff'
@@ -253,8 +240,8 @@ const AdminLiveMonitoring = ({ theme }) => {
                   <Area 
                     type="monotone" 
                     dataKey="hz" 
-                    stroke="#BAB86C" 
-                    strokeWidth={4} 
+                    stroke="#22c55e" 
+                    strokeWidth={3} 
                     fillOpacity={1} 
                     fill="url(#colorHz)" 
                     animationDuration={2000}
@@ -266,38 +253,46 @@ const AdminLiveMonitoring = ({ theme }) => {
         </div>
 
         {/* Right Column: Real-Time Node Stream */}
-        <div className="flex-col gap-lg overflow-hidden">
-          <div className="surface-card flex-1 p-0 flex flex-col overflow-hidden" style={{ minHeight: '800px' }}>
+        <div className="flex flex-col gap-lg overflow-hidden h-full">
+          <div className="surface-card flex-1 p-0 flex flex-col overflow-hidden" style={{ minHeight: '850px' }}>
             <div className="p-xl border-b border-white/10 bg-black/40 flex justify-between items-center">
               <div>
-                <h3 className="m-0 flex items-center gap-sm font-black text-xs uppercase tracking-widest"><Server size={20} className="text-gold" /> Real-Time Node Stream</h3>
-                <p className="m-0 text-[10px] text-muted mt-xs font-black uppercase tracking-widest">Active load fluctuations</p>
+                <h3 className="m-0 flex items-center gap-sm font-black text-sm uppercase tracking-widest"><Server size={20} className="text-white" /> Real-Time Node Stream</h3>
+                <p className="m-0 text-[10px] text-muted-main mt-xs font-black uppercase tracking-widest opacity-60">Active load fluctuations for tracked VPP clusters</p>
               </div>
             </div>
             
-            <div className="streaming-list p-md flex flex-col gap-sm overflow-y-auto h-full">
+            <div className="streaming-list p-md flex flex-col gap-sm overflow-y-auto h-full scrollbar-hide">
               {stream.map((item, idx) => (
                 <div 
                   key={idx} 
                   onClick={() => handleNodeClick(item)}
-                  className={`stream-row p-xl rounded-2xl border-l-4 transition-all cursor-pointer hover:translate-x-1 bg-black/40 border border-white/5 ${item.type === 'danger' ? 'border-l-red' : 'border-l-gold'}`} 
-                  style={{ marginBottom: '12px' }}
+                  className={`stream-row p-xl rounded-xl transition-all cursor-pointer bg-black/20 border border-white/5 hover:border-white/10 relative group`} 
+                  style={{ marginBottom: '8px' }}
                 >
-                  <div className="flex justify-between items-center mb-md">
-                    <div className="flex flex-col gap-1">
-                      <span className="font-black text-sm text-gold tracking-widest">{item.id}</span>
-                      <span className="text-[10px] text-muted uppercase font-black tracking-widest">{item.name}</span>
-                    </div>
-                    <span className="text-[9px] text-muted flex items-center gap-xs font-black uppercase tracking-widest"><Clock size={10} />{item.time}</span>
+                   {/* Live indicator */}
+                   <div className="absolute top-4 right-4 flex items-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+                      <div className={`w-1.5 h-1.5 rounded-full ${item.type === 'danger' ? 'bg-red-500 animate-pulse' : 'bg-green-500'}`}></div>
+                      <span className="text-[9px] font-black uppercase tracking-tighter text-muted-main">{item.time}</span>
+                   </div>
+
+                  <div className="flex flex-col gap-0.5 mb-md">
+                    <span className="font-black text-sm text-white tracking-widest">{item.id}</span>
+                    <span className="text-[11px] text-muted-main uppercase font-black tracking-widest">{item.name}</span>
                   </div>
-                  <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
-                    <div className="flex flex-col gap-1">
-                       <span className="text-muted">Generation</span>
-                       <span className="text-white">{(item.gen + (Math.random()*0.4 - 0.2)).toFixed(1)} kW</span>
+
+                  <div className="flex items-center gap-6">
+                    <div className="flex items-baseline gap-1.5">
+                       <span className="text-[9px] text-muted-main uppercase font-black opacity-60">Gen:</span>
+                       <span className="text-[11px] font-black text-orange-400">{(item.gen).toFixed(1)}kW</span>
                     </div>
-                    <div className="flex flex-col gap-1 items-end">
-                       <span className="text-muted">Load</span>
-                       <span className={item.type === 'danger' ? 'text-red' : 'text-white'}>{(item.load + (Math.random()*0.5 - 0.25)).toFixed(1)} kW</span>
+                    <div className="flex items-baseline gap-1.5">
+                       <span className="text-[9px] text-muted-main uppercase font-black opacity-60">Load:</span>
+                       <span className={`text-[11px] font-black ${item.type === 'danger' ? 'text-red-500' : 'text-white'}`}>{(item.load).toFixed(1)}kW</span>
+                    </div>
+                    <div className="flex items-baseline gap-1.5">
+                       <span className="text-[9px] text-muted-main uppercase font-black opacity-60">Status:</span>
+                       <span className={`text-[11px] font-black uppercase tracking-widest ${item.color === '#ef4444' ? 'text-red-500' : 'text-green-500'}`}>{item.status}</span>
                     </div>
                   </div>
                 </div>
@@ -307,8 +302,34 @@ const AdminLiveMonitoring = ({ theme }) => {
         </div>
 
       </div>
+      
+      <style>{`
+        .tactical-tooltip-node {
+          background: rgba(0,0,0,0.85) !important;
+          border: 1px solid rgba(255,255,255,0.1) !important;
+          border-radius: 4px !important;
+          padding: 2px 8px !important;
+          color: #fff !important;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+        }
+        .tactical-tooltip-node:before {
+          border-top-color: rgba(255,255,255,0.1) !important;
+        }
+        .admin-pulse {
+          animation: nodePulse 2s infinite ease-in-out;
+        }
+        @keyframes nodePulse {
+          0% { stroke-width: 2; fill-opacity: 0.5; }
+          50% { stroke-width: 8; fill-opacity: 0.8; }
+          100% { stroke-width: 2; fill-opacity: 0.5; }
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   );
 };
 
 export default AdminLiveMonitoring;
+

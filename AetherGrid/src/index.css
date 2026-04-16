@@ -112,12 +112,33 @@ h1, h2, h3, h4, h5, h6 {
 
 .surface-card {
   position: relative;
-  background-color: var(--surface-white);
-  border-radius: var(--radius-md);
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
-  border: 1px solid rgba(186, 184, 108, 0.15);
-  backdrop-filter: blur(10px);
-  overflow: hidden;
+  border: 1px solid rgba(186, 184, 108, 0.2);
+  background-clip: padding-box;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 40px -15px rgba(0,0,0,0.8);
+  backdrop-filter: blur(12px);
+}
+
+.surface-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: inherit;
+  padding: 1.5px; /* Thicker border */
+  background: linear-gradient(135deg, rgba(186, 184, 108, 0.6) 0%, rgba(255,255,255,0.2) 50%, rgba(186, 184, 108, 0.3) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.surface-card:hover {
+  box-shadow: 0 0 30px 2px rgba(186, 184, 108, 0.2);
+  transform: translateY(-2px);
 }
 
 .flex { display: flex; }
@@ -162,9 +183,50 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Tactical State Borders */
-.border-gold-tactical { border: 1px solid rgba(186, 184, 108, 0.4) !important; box-shadow: 0 0 15px rgba(186, 184, 108, 0.05); }
-.border-yellow-tactical { border: 1.5px solid rgba(234, 179, 8, 0.6) !important; box-shadow: 0 0 15px rgba(234, 179, 8, 0.1); }
-.border-red-tactical { border: 1.5px solid rgba(239, 68, 68, 0.6) !important; box-shadow: 0 0 15px rgba(239, 68, 68, 0.1); }
+.border-gold-tactical { 
+  border: 1px solid transparent !important; 
+  position: relative;
+  box-shadow: 0 0 20px rgba(186, 184, 108, 0.15) !important;
+}
+.border-gold-tactical::after {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1.5px;
+  background: linear-gradient(135deg, #FFD700 0%, #BAB86C 50%, rgba(186, 184, 108, 0.2) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude; pointer-events: none;
+}
+.border-yellow-tactical { 
+  border: 1px solid transparent !important; 
+  position: relative;
+  box-shadow: 0 0 20px rgba(255, 191, 0, 0.2) !important;
+}
+.border-yellow-tactical::after {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1.5px;
+  background: linear-gradient(135deg, #FFC107 0%, #eab308 50%, rgba(234, 179, 8, 0.2) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude; pointer-events: none;
+}
+.border-red-tactical { 
+  border: 1px solid transparent !important; 
+  position: relative;
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.25) !important;
+}
+.border-red-tactical::after {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1.5px;
+  background: linear-gradient(135deg, #FF0000 0%, #ef4444 50%, rgba(239, 68, 68, 0.2) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude; pointer-events: none;
+}
+.border-green-tactical { 
+  border: 1px solid transparent !important; 
+  position: relative;
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.2) !important;
+}
+.border-green-tactical::after {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1.5px;
+  background: linear-gradient(135deg, #00FF00 0%, #22c55e 50%, rgba(34, 197, 94, 0.2) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude; pointer-events: none;
+}
 
 .hover-lift:hover {
   transform: translateY(-4px);

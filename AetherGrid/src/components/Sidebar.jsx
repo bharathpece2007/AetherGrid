@@ -1,4 +1,3 @@
-import React from 'react';
 import { 
   Grid, Shield, Layout, Settings, Zap, 
   Activity, Navigation, Sun, Wind, CloudRain, ShieldAlert, Database,
@@ -14,17 +13,14 @@ const Sidebar = ({ role, activeTab, setActiveTab }) => {
     { id: 'der-management', label: 'Assets & Solar Management', icon: Zap },
     { id: 'weather-center', label: 'Weather Intelligence', icon: Sun },
     { id: 'forecast-ai', label: 'Forecasting and Intelligence', icon: Layout },
-    { id: 'resilience', label: 'Resilience and Recovery', icon: ShieldAlert },
-    { id: 'dataset', label: 'Data and Analytics', icon: Database },
-    { id: 'billing', label: 'Finance & Billing', icon: CreditCard }
+    { id: 'dataset', label: 'Data and Analytics', icon: Database }
   ];
 
   const userTabs = [
     { id: 'overview', label: 'Node Overview', icon: Grid },
     { id: 'energy-sharing', label: 'P2P Exchange', icon: Network },
     { id: 'battery', label: 'Critical Storage', icon: Zap },
-    { id: 'weather-alerts', label: 'Weather Intel', icon: Sun },
-    { id: 'billing', label: 'Finance & Billing', icon: CreditCard }
+    { id: 'weather-alerts', label: 'Weather Intel', icon: Sun }
   ];
 
   const tabs = role === 'admin' ? adminTabs : userTabs;
@@ -51,7 +47,11 @@ const Sidebar = ({ role, activeTab, setActiveTab }) => {
 
       <div className="sidebar-bottom">
         <nav className="sidebar-nav bottom-nav">
-          <button className="nav-item" style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit' }}>
+          <button 
+            onClick={() => setActiveTab('settings')}
+            className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
+            style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit' }}
+          >
             <Settings size={18} />
             <span>Settings</span>
           </button>
