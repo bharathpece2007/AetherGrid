@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AetherGrid Tax Invoice</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #c8c8c8;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .bill {
+      background: #e6e5dc;
+      border: 3px solid #7a8a3c;
+      width: 620px;
+      padding: 32px 36px;
+      color: #1a1a1a;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .header .company {
+      font-size: 15px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    .header .invoice-type {
+      font-size: 13px;
+    }
+
+    hr.divider {
+      border: none;
+      border-top: 1px solid #7a8a3c;
+      margin: 14px 0;
+    }
+
+    /* ── CUSTOMER / TRANSACTION BLOCK ── */
+    .info-grid {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .info-left { text-align: left; }
+    .info-right { text-align: right; }
+
+    /* ── METER TABLE ── */
+    .section-title {
+      font-weight: bold;
+      margin: 4px 0 6px 0;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+    }
+    table th {
+      text-align: left;
+      font-weight: bold;
+      padding: 2px 0;
+      border-bottom: 1px solid #aaa;
+    }
+    table th:last-child { text-align: right; }
+    table td { padding: 2px 0; }
+    table td:last-child { text-align: right; }
+    .row-right td { text-align: right; }
+
+    /* ── BILLING SUMMARY ── */
+    .billing-title {
+      text-align: center;
+      font-weight: bold;
+      font-size: 15px;
+      margin: 4px 0 10px 0;
+      letter-spacing: 1px;
+    }
+
+    .billing-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 2px 0;
+    }
+    .billing-row .label { flex: 1; }
+    .billing-row .amount { text-align: right; white-space: nowrap; padding-left: 12px; }
+
+    .due-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      padding: 2px 0;
+    }
+    .due-values {
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 0;
+    }
+
+    .net-payable {
+      font-weight: bold;
+      margin-top: 4px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+    .footer-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .qr-box {
+      width: 58px;
+      height: 58px;
+      border: 2px solid #1a1a1a;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 1px;
+      padding: 3px;
+      flex-shrink: 0;
+    }
+    .qr-cell { background: #1a1a1a; border-radius: 1px; }
+    .qr-empty { background: transparent; }
+
+    .footer-left-text {
+      font-size: 11px;
+      line-height: 1.6;
+    }
+    .footer-right {
+      text-align: right;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .disclaimer {
+      font-size: 10.5px;
+      margin-top: 10px;
+      line-height: 1.6;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+<div class="bill">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="company">AetherGrid Power Intelligence</div>
+    <div class="invoice-type">TAX INVOICE [RES]</div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- CUSTOMER & TRANSACTION INFO -->
+  <div class="info-grid">
+    <div class="info-left">Customer IDRES-4421</div>
+    <div class="info-right">Residential Sector</div>
+  </div>
+  <div class="info-grid">
+    <div class="info-left">Mysuru Residential Node 8</div>
+    <div class="info-right">Transaction IDTXN-00991823</div>
+  </div>
+  <div class="info-grid">
+    <div class="info-left"></div>
+    <div class="info-right">DATED: 16-APR-2026</div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- METER DETAILS -->
+  <div class="section-title">Meter Details</div>
+  <table>
+    <thead>
+      <tr>
+        <th>METER DESCRIPTION</th>
+        <th style="text-align:center;">READING DATE</th>
+        <th>UNITS (KWH)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>PREVIOUS READING</td>
+        <td style="text-align:center;">22/06/24</td>
+        <td>2450</td>
+      </tr>
+      <tr>
+        <td>CURRENT READING</td>
+        <td style="text-align:center;">22/07/24</td>
+        <td>2685</td>
+      </tr>
+      <tr>
+        <td>TOTAL CONSUMPTION</td>
+        <td style="text-align:center;"></td>
+        <td>235 UNITS</td>
+      </tr>
+      <tr>
+        <td>MAXIMUM GRID DEMAND RECORDED</td>
+        <td></td>
+        <td>2.10 KVA</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr class="divider" />
+
+  <!-- BILLING SUMMARY -->
+  <div class="billing-title">BILLING SUMMARY</div>
+
+  <div class="due-header">
+    <span>DUE DATE WITH REBATE</span>
+    <span>FULL AMOUNT</span>
+  </div>
+  <div class="due-values">
+    <span>01/08/2024&nbsp;&nbsp;&nbsp;&#8377; 1842.00</span>
+    <span>&#8377; 1910.00</span>
+  </div>
+
+  <div class="billing-row" style="margin-top:6px;">
+    <span class="label">Solar Grid Feed-in Rebate Applied</span>
+    <span class="amount">- &#8377; 45.50</span>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="billing-row net-payable">
+    <span class="label">NET PAYABLE AMOUNT</span>
+    <span class="amount">&#8377; 1796.50</span>
+  </div>
+  <div style="font-size:11.5px; margin-top:4px;">Valid for electronic settlement</div>
+
+  <hr class="divider" />
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-left">
+      <!-- Simple QR simulation -->
+      <div style="font-size:36px; line-height:1; letter-spacing:-2px; font-family:monospace;">
+        &#9647;&#9646;<br/>&#9646;&#9647;<br/>&#9647;&#9646;
+      </div>
+      <div class="footer-left-text">
+        <strong>AUTHENTICATION HUB</strong>
+      </div>
+    </div>
+    <div class="footer-right">
+      <div>OFFICIAL Digital Settlement Portal</div>
+      <div><strong>SCAN TO SETTLE NOW</strong></div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    This is a computer generated artifact and requires no physical signature.
+    Verified by AetherGrid Security Protocol 7.2.
+  </div>
+
+</div>
+</body>
+</html>
