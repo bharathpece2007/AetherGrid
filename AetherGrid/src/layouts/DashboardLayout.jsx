@@ -22,7 +22,7 @@ import AIChatBot from '../components/AIChatBot';
 import { 
   Bell, User, CloudRain, Sun, Moon, Link as LinkIcon, Shield, LogOut,
   Grid, Activity, Zap, Server, TrendingUp, BarChart2, ShieldAlert,
-  Database, Layout, ThermometerSun, CreditCard
+  Database, Layout, ThermometerSun, CreditCard, Network
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCurrentWeather } from '../services/weatherService';
@@ -50,6 +50,7 @@ const DashboardLayout = () => {
 
   const userTabs = [
     { id: 'overview', label: 'Node Overview', icon: Layout },
+    { id: 'energy-sharing', label: 'P2P Exchange', icon: Network },
     { id: 'battery', label: 'Critical Storage', icon: Server },
     { id: 'weather-alerts', label: 'Weather Intel', icon: ThermometerSun },
     { id: 'billing', label: 'Finance & Billing', icon: CreditCard },

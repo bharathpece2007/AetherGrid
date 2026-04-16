@@ -2,7 +2,7 @@ import React from 'react';
 import { 
   Grid, Shield, Layout, Settings, Zap, 
   Activity, Navigation, Sun, Wind, CloudRain, ShieldAlert, Database,
-  CreditCard
+  CreditCard, Network
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -21,6 +21,7 @@ const Sidebar = ({ role, activeTab, setActiveTab }) => {
 
   const userTabs = [
     { id: 'overview', label: 'Node Overview', icon: Grid },
+    { id: 'energy-sharing', label: 'P2P Exchange', icon: Network },
     { id: 'battery', label: 'Critical Storage', icon: Zap },
     { id: 'weather-alerts', label: 'Weather Intel', icon: Sun },
     { id: 'billing', label: 'Finance & Billing', icon: CreditCard }
