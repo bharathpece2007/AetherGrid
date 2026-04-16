@@ -4,6 +4,7 @@ import {
   Activity, CheckCircle, Clock, Zap, Target, 
   ShieldCheck, TrendingDown, TrendingUp, Cpu, Server, Network
 } from 'lucide-react';
+import { io } from 'socket.io-client';
 import { supabase } from '../supabaseClient';
 import './Admin.css';
 
@@ -51,15 +52,18 @@ const EnergySharing = () => {
   // Backend Sync Handlers
   const handleBroadcastOffer = async () => {
     setIsBroadcasting(true);
-    setDbStatusMsg("Syncing DB...");
+    setDbStatusMsg("Syncing Market...");
     try {
-      if(supabase) {
-        await supabase
-          .from('der_registry')
-          .update({ status: `Selling Surplus @ $${sellingPrice}`, updated_at: new Date().toISOString() })
-          .eq('node_id', 'ND-0842');
-      }
-      await new Promise(r => setTimeout(r, 600)); // Network delay simulation
+      await fetch('http://localhost:4000/sell', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: 'ND-0842', 
+          energy: exportable,
+          price: sellingPrice,
+          distance: 0.1
+        })
+      });
       setDbStatusMsg("Success!");
     } catch (e) {
       console.warn("Backend error", e);
@@ -71,15 +75,18 @@ const EnergySharing = () => {
 
   const handleSaveBuyLimit = async () => {
     setIsSavingBuyLimit(true);
-    setDbStatusMsg("Syncing DB...");
+    setDbStatusMsg("Syncing Market...");
     try {
-      if(supabase) {
-        await supabase
-          .from('der_registry')
-          .update({ status: `Auto-Buy Limit @ $${buyingLimit}`, updated_at: new Date().toISOString() })
-          .eq('node_id', 'ND-0842');
-      }
-      await new Promise(r => setTimeout(r, 600)); 
+      await fetch('http://localhost:4000/buy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: 'ND-0842', 
+          energy: 2.0, 
+          price: buyingLimit,
+          distance: 0.1
+        })
+      });
       setDbStatusMsg("Success!");
     } catch (e) {
       console.warn("Backend error", e);
@@ -89,30 +96,41 @@ const EnergySharing = () => {
     }
   };
 
-  // Simulated Market Generator
+  // Socket.io Market Sync
   useEffect(() => {
-    const marketInterval = setInterval(() => {
-      // Simulate new orders entering the market
-      if(Math.random() > 0.4) {
-        setMarketAsks(prev => {
-          const newAsk = { id: Date.now(), node: generateNode(), rate: generatePrice(0.19), vol: generateVol(), dist: generateDist() };
-          return [newAsk, ...prev].slice(0, 5).sort((a,b) => a.rate - b.rate); // Sort cheapest asks first
-        });
-      }
-      
-      if(Math.random() > 0.4) {
-        setMarketBids(prev => {
-          const newBid = { id: Date.now()+1, node: generateNode(), rate: generatePrice(0.15), vol: generateVol(), dist: generateDist() };
-          return [newBid, ...prev].slice(0, 5).sort((a,b) => b.rate - a.rate); // Sort highest bids first
-        });
-      }
-    }, 2500);
-    
-    // Simulate initial load
-    setMarketAsks([...Array(4)].map((_,i) => ({ id: i, node: generateNode(), rate: generatePrice(0.19), vol: generateVol(), dist: generateDist() })).sort((a,b) => a.rate - b.rate));
-    setMarketBids([...Array(4)].map((_,i) => ({ id: i+10, node: generateNode(), rate: generatePrice(0.15), vol: generateVol(), dist: generateDist() })).sort((a,b) => b.rate - a.rate));
-    
-    return () => clearInterval(marketInterval);
+    const socket = io('http://localhost:4000');
+
+    // Initial Fetch
+    fetch('http://localhost:4000/asks')
+      .then(r => r.json())
+      .then(data => {
+        const mapped = data.map(d => ({ id: d.id, node: d.user_id, rate: d.price, vol: d.energy, dist: d.distance }));
+        setMarketAsks(mapped.sort((a,b) => a.rate - b.rate).slice(0, 5));
+      }).catch(e => console.error(e));
+
+    fetch('http://localhost:4000/bids')
+      .then(r => r.json())
+      .then(data => {
+        const mapped = data.map(d => ({ id: d.id, node: d.user_id, rate: d.price, vol: d.energy, dist: d.distance }));
+        setMarketBids(mapped.sort((a,b) => b.rate - a.rate).slice(0, 5));
+      }).catch(e => console.error(e));
+
+    // Listeners
+    socket.on('new_ask', (d) => {
+      setMarketAsks(prev => {
+        const item = { id: d.id, node: d.user_id, rate: d.price, vol: d.energy, dist: d.distance };
+        return [item, ...prev].sort((a,b) => a.rate - b.rate).slice(0, 5);
+      });
+    });
+
+    socket.on('new_bid', (d) => {
+      setMarketBids(prev => {
+        const item = { id: d.id, node: d.user_id, rate: d.price, vol: d.energy, dist: d.distance };
+        return [item, ...prev].sort((a,b) => b.rate - a.rate).slice(0, 5);
+      });
+    });
+
+    return () => socket.disconnect();
   }, []);
 
   // Trading Match Engine (Runs every 3 seconds)
